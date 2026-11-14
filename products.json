@@ -33,7 +33,9 @@
     "img": "https://sortiment.lidl.ch/media/catalog/product/cache/80b93a04f8c892116f517db3e19712d6/1/0/1006660_Vollwaschmittel_PSXX.jpg",
     "images": [
       "https://sortiment.lidl.ch/media/catalog/product/cache/80b93a04f8c892116f517db3e19712d6/1/0/1006660_Vollwaschmittel_PSXX.jpg"
-    ]
+    ],
+    "avail": true,
+    "stock": 1
   },
   {
     "id": "p1794657316956",
