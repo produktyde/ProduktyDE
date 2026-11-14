@@ -128,6 +128,19 @@
     ],
     "avail": true,
     "stock": 2,
-    "cat": "Chemia"
+    "cat": "Inne"
+  },
+  {
+    "id": "p1794662685549",
+    "name": "Pantene Pro-V Volumen Pur Active Nutri-Plex Shampoo XXL",
+    "price": 30,
+    "desc": "• Pełna nazwa. Pantene Pro-V Volumen Pur Active Nutri-Plex Shampoo XXL\n• Pojemność. 1000 ml (1 L)\n• Kod kreskowy (EAN). 8700216557603\n• Rodzaj opakowania. Duża butelka XXL z wygodnym dozownikiem z pompką ułatwiającym codzienną aplikację\n• Producent / Dystrybutor. Procter & Gamble Service GmbH, 65823 Schwalbach am Taunus (Niemcy)\nSkład i bezpieczeństwo\n• Główne składniki. Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Xylenesulfonate, Sodium Chloride, Citric Acid, Sodium Benzoate, Parfum, Sodium Citrate, Sodium Salicylate, Hydroxypropyl Methylcellulose, Sodium Hydroxide, Panthenol, Tetrasodium EDTA, Hexamethylindanopyran, Dimethyl Phenethyl Acetate, Hexyl Cinnamal, Histidine, Glyoxal.\n• Sposób użycia. Wmasować niewielką ilość szamponu w mokre włosy aż do uzyskania piany, a następnie dokładnie spłukać wodą. Dla uzyskania najlepszych rezultatów stosować razem z odżywką i produktami z serii Pantene Pro-V Volumen Pur.\n• Zwiększenie objętości cienkich włosów. Lekka formuła unosi włosy u nasady oraz nadaje im widoczną pełnię i sprężystość bez efektu obciążenia.\n• Technologia Active Nutri-Plex. Odżywcza formuła Pro-V wzbogacona o składniki pielęgnujące chroni wiązania włosów i wzmacnia je od wewnątrz podczas codziennego mycia.\n• Czysty skład bez zbędnych dodatków. Szampon nie zawiera olejów mineralnych ani barwników, dzięki czemu delikatnie oczyszcza skórę głowy i pasma.\n• Potwierdzona skuteczność. Jakość formuły oraz zawartość składników odżywczych została przebadana i potwierdzona przez Szwajcarski Instytut Witamin (Swiss Vitamin Institute).",
+    "img": "images/p1794662681817-0.jpg",
+    "images": [
+      "images/p1794662681817-0.jpg"
+    ],
+    "avail": true,
+    "stock": 1,
+    "cat": "Inne"
   }
 ]
