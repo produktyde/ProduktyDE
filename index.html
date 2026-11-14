@@ -259,6 +259,10 @@ input[type=file]::file-selector-button{background:var(--ink);color:#fff;border:n
 .cats button span{opacity:.5;margin-left:6px;font-weight:600}
 .cats button:hover{transform:translateY(-2px);box-shadow:0 12px 26px -14px rgba(60,50,150,.4)}
 .cats button.on{background:var(--ink);color:#fff;border-color:transparent}
+.subs{margin:-14px 0 28px}
+.subs button{padding:7px 14px;font-size:.82rem;font-weight:600;background:var(--soft)}
+.subs button.on{background:var(--grad);color:#fff}
+[data-theme="dark"] .subs button.on{color:#fff}
 [data-theme="dark"] .cats button.on{color:#0e1020}
 .meta{display:flex;gap:6px;flex-wrap:wrap}
 .tag{align-self:flex-start;font-size:.74rem;font-weight:700;padding:4px 10px;border-radius:999px;background:var(--soft);color:var(--muted);white-space:nowrap}
@@ -343,6 +347,7 @@ input[type=file]::file-selector-button{background:var(--ink);color:#fff;border:n
     </div>
   </div>
   <div class="cats" id="cats"></div>
+  <div class="cats subs" id="subs" style="display:none"></div>
   <div class="grid" id="grid"></div>
 </section>
 
@@ -392,7 +397,9 @@ input[type=file]::file-selector-button{background:var(--ink);color:#fff;border:n
       <div class="field"><label>Nazwa przedmiotu</label><input id="aName" placeholder="np. Persil Discs 40 prań"></div>
       <div class="field"><label>Cena (zł)</label><input id="aPrice" type="number" step="0.01" min="0" placeholder="199.99"></div>
       <div class="field"><label>Kategoria</label>
-        <select id="aCat"><option>Chemia</option><option>Słodycze</option><option>Inne</option></select></div>
+        <select id="aCat"></select></div>
+      <div class="field" id="aSubWrap"><label>Podkategoria</label>
+        <select id="aSub"></select></div>
       <div class="field"><label>Dostępność</label>
         <select id="aAvail"><option value="1">Dostępny</option><option value="0">Niedostępny</option></select></div>
       <div class="field"><label>Ilość dostępnych sztuk</label><input id="aStock" type="number" step="1" min="0" placeholder="np. 25 (puste = bez limitu)">
@@ -453,10 +460,10 @@ const PLACEHOLDER = "data:image/svg+xml;utf8," + encodeURIComponent(
 
 // Zapasowa lista produktów (używana tylko, gdy nie da się wczytać products.json)
 const DEFAULTS = [
-  {"id": "p1", "cat": "Chemia", "name": "Persil Discs Universal 40 prań", "price": 54.99, "desc": "Skoncentrowane kapsułki do prania białego i kolorowego. Skuteczne już od 20°C, wygodne w dozowaniu: jedna kapsułka na jedno pranie.", "img": ""},
-  {"id": "p2", "cat": "Chemia", "name": "Perwoll Wełna i Delikatne 1,5 l", "price": 29.99, "desc": "Płyn do prania ubrań delikatnych, wełny i jedwabiu. Chroni kolory i kształt tkanin, zostawia przyjemny zapach.", "img": ""},
-  {"id": "p3", "cat": "Chemia", "name": "Lenor Płyn do płukania Wiosenna Świeżość", "price": 24.99, "desc": "Zmiękcza tkaniny i nadaje im długotrwały, świeży zapach. Wystarcza na kilkadziesiąt prań.", "img": ""},
-  {"id": "p4", "cat": "Chemia", "name": "Somat Gold tabletki do zmywarki 54 szt.", "price": 44.99, "desc": "Tabletki do zmywarki do mocno zabrudzonych naczyń. Rozpuszczają przypalenia i tłuszcz, a szkło zostawiają błyszczące.", "img": ""},
+  {"id": "p1", "cat": "Chemia", "sub": "Proszki do prania", "name": "Persil Discs Universal 40 prań", "price": 54.99, "desc": "Skoncentrowane kapsułki do prania białego i kolorowego. Skuteczne już od 20°C, wygodne w dozowaniu: jedna kapsułka na jedno pranie.", "img": ""},
+  {"id": "p2", "cat": "Chemia", "sub": "Płyny do prania", "name": "Perwoll Wełna i Delikatne 1,5 l", "price": 29.99, "desc": "Płyn do prania ubrań delikatnych, wełny i jedwabiu. Chroni kolory i kształt tkanin, zostawia przyjemny zapach.", "img": ""},
+  {"id": "p3", "cat": "Chemia", "sub": "Płyny do płukania", "name": "Lenor Płyn do płukania Wiosenna Świeżość", "price": 24.99, "desc": "Zmiękcza tkaniny i nadaje im długotrwały, świeży zapach. Wystarcza na kilkadziesiąt prań.", "img": ""},
+  {"id": "p4", "cat": "Chemia", "sub": "Kapsułki do zmywarki", "name": "Somat Gold tabletki do zmywarki 54 szt.", "price": 44.99, "desc": "Tabletki do zmywarki do mocno zabrudzonych naczyń. Rozpuszczają przypalenia i tłuszcz, a szkło zostawiają błyszczące.", "img": ""},
   {"id": "p5", "cat": "Inne", "name": "Funny-Frisch Chipsfrisch Ungarisch 150 g", "price": 9.99, "desc": "Klasyczne niemieckie chipsy o smaku papryki po węgiersku. Chrupiące, cienko krojone, idealne na wieczór z filmem.", "img": ""},
   {"id": "p6", "cat": "Słodycze", "name": "Haribo Goldbären 175 g", "price": 7.99, "desc": "Oryginalne żelki w kształcie misiów, w pięciu owocowych smakach. Słodka przekąska znana w całej Europie.", "img": ""},
   {"id": "p7", "cat": "Słodycze", "name": "Ritter Sport Alpenmilch 100 g", "price": 8.49, "desc": "Kwadratowa czekolada mleczna z alpejskim mlekiem. Delikatna, kremowa i łatwa do połamania na kostki.", "img": ""},
@@ -483,14 +490,56 @@ let editId = null, formPhotos = [];       // formularz admina: edytowany produkt
 let cropQueue = [], cropTotal = 0, cr = {};
 let gal = {list:[], i:0};
 const all = () => products;
-const CATS = ["Chemia","Słodycze","Inne"];
-const catOf = p => CATS.includes(p.cat) ? p.cat : "Inne";
-let cat = "all";
+/* Kategorie i podkategorie — tutaj możesz zmienić nazwy lub dopisać nowe */
+const CATS = {
+  "Chemia":   ["Proszki do prania","Płyny do prania","Płyny do płukania","Kapsułki do zmywarki","Płyny do toalety"],
+  "Szampony": [],
+  "Kawy":     [],
+  "Słodycze": [],
+  "Inne":     []
+};
+const CAT_NAMES = Object.keys(CATS);
+// Produkty bez zapisanej kategorii dostają ją automatycznie na podstawie nazwy
+const GUESS = [
+  ["Kawy","",/(^|\s)kaw[aęyiou]|coffee|espresso|jacobs|tchibo|lavazza|nescaf|dallmayr|eduscho|melitta|illy|cappuccino|latte/i],
+  ["Szampony","",/szampon|odżywk|shampoo/i],
+  ["Chemia","Płyny do toalety",/domestos|toalet|(^|\s)wc(\s|$)|bref|harpic/i],
+  ["Chemia","Kapsułki do zmywarki",/zmywark|somat|finish/i],
+  ["Chemia","Płyny do płukania",/płukania|lenor|silan/i],
+  ["Chemia","Płyny do prania",/perwoll|płyn do prania|żel do prania/i],
+  ["Chemia","Proszki do prania",/proszek|persil|ariel|vizir|spee|discs/i],
+  ["Słodycze","",/haribo|ritter|nutella|czekolad|żelki|milka|lindt|kinder|snickers|toffifee|merci|ferrero|wafel|ciastk/i]
+];
+function guess(p){ const n = p.name || ""; for(const [c,s,re] of GUESS) if(re.test(n)) return [c,s]; return ["Inne",""]; }
+const catOf = p => p.cat === "Płyny" ? "Szampony" : (CAT_NAMES.includes(p.cat) ? p.cat : guess(p)[0]);
+function subOf(p){
+  const c = catOf(p);
+  if(CATS[c].includes(p.sub)) return p.sub;
+  const g = guess(p);
+  return (g[0] === c && CATS[c].includes(g[1])) ? g[1] : "";
+}
+const catLabel = p => catOf(p) + (subOf(p) ? " · " + subOf(p) : "");
+let cat = "all", sub = "all";
 function renderCats(){
   const l = all();
-  const mk = (k,label,n)=>`<button class="${cat===k?"on":""}" data-cat="${esc(k)}">${esc(label)}<span>${n}</span></button>`;
-  $("#cats").innerHTML = mk("all","Wszystkie",l.length) + CATS.map(c=>mk(c,c,l.filter(p=>catOf(p)===c).length)).join("");
+  const mk = (attr,k,label,n,on)=>`<button class="${on?"on":""}" ${attr}="${esc(k)}">${esc(label)}<span>${n}</span></button>`;
+  $("#cats").innerHTML = mk("data-cat","all","Wszystkie",l.length,cat==="all")
+    + CAT_NAMES.map(c=>mk("data-cat",c,c,l.filter(p=>catOf(p)===c).length,cat===c)).join("");
+  const sb = $("#subs"), subs = cat !== "all" ? CATS[cat] : [];
+  if(!subs.length){ sb.innerHTML = ""; sb.style.display = "none"; return; }
+  const inCat = l.filter(p=>catOf(p)===cat);
+  sb.style.display = "";
+  sb.innerHTML = mk("data-sub","all","Wszystko: "+cat,inCat.length,sub==="all")
+    + subs.map(s=>mk("data-sub",s,s,inCat.filter(p=>subOf(p)===s).length,sub===s)).join("");
 }
+// Pola kategorii w panelu admina
+function fillCatOptions(){ $("#aCat").innerHTML = CAT_NAMES.map(c=>`<option>${esc(c)}</option>`).join(""); }
+function fillSub(c, s){
+  const subs = CATS[c] || [];
+  $("#aSubWrap").style.display = subs.length ? "" : "none";
+  $("#aSub").innerHTML = '<option value="">— brak —</option>' + subs.map(x=>`<option${x===s?" selected":""}>${esc(x)}</option>`).join("");
+}
+fillCatOptions();
 
 /* ---------- Dostępność ---------- */
 function stockN(p){ const s = p.stock; return (s===undefined || s===null || s==="") ? null : Math.max(0, Math.floor(Number(s)) || 0); }
@@ -520,6 +569,7 @@ const isAdmin = () => sessionStorage.getItem("shop_admin")==="1";
 function view(){
   let l = all();
   if(cat !== "all") l = l.filter(p=>catOf(p)===cat);
+  if(cat !== "all" && sub !== "all") l = l.filter(p=>subOf(p)===sub);
   if(query){ const q = query.toLowerCase(); l = l.filter(p=>(p.name+" "+(p.desc||"")).toLowerCase().includes(q)); }
   if(sortBy==="asc") l = [...l].sort((a,b)=>a.price-b.price);
   else if(sortBy==="desc") l = [...l].sort((a,b)=>b.price-a.price);
@@ -620,7 +670,7 @@ function renderGrid(){
         ${isAdmin()?`<button class="cedit" data-edit="${esc(p.id)}" title="Edytuj produkt">✏️</button><button class="cdel" data-del="${esc(p.id)}" title="Usuń produkt">🗑</button>`:""}
       </div>
       <div class="info">
-        <div class="meta">${availBadge(p)}<span class="tag">${esc(catOf(p))}</span></div>
+        <div class="meta">${availBadge(p)}<span class="tag">${esc(catLabel(p))}</span></div>
         <h3>${esc(p.name)}</h3>
         <p>${esc(p.desc||"")}</p>
         <div class="bottom">
@@ -723,7 +773,11 @@ $("#checkout").onclick = ()=>{
 };
 $("#cats").addEventListener("click",e=>{
   const b = e.target.closest("[data-cat]"); if(!b) return;
-  cat = b.dataset.cat; renderCats(); renderGrid();
+  cat = b.dataset.cat; sub = "all"; renderCats(); renderGrid();
+});
+$("#subs").addEventListener("click",e=>{
+  const b = e.target.closest("[data-sub]"); if(!b) return;
+  sub = b.dataset.sub; renderCats(); renderGrid();
 });
 $("#q").addEventListener("input",e=>{ query = e.target.value.trim(); renderGrid(); });
 $("#sort").addEventListener("change",e=>{ sortBy = e.target.value; renderGrid(); });
@@ -756,7 +810,7 @@ function openProduct(id){
     </div>
     <div class="txt"><h2>${esc(p.name)}</h2><div class="price">${fmt(+p.price)}</div>
     <p class="desc">${esc(p.desc||"")}</p>
-    <div class="meta">${availBadge(p)}<span class="tag">${esc(catOf(p))}</span></div>
+    <div class="meta">${availBadge(p)}<span class="tag">${esc(catLabel(p))}</span></div>
     <button class="btn-full" data-add="${esc(p.id)}"${avail(p)?"":" disabled"}>${avail(p)?"Dodaj do koszyka":"Produkt niedostępny"}</button></div>`;
   openModal("productModal");
 }
@@ -937,11 +991,12 @@ function updateFormMode(){
 }
 function resetForm(){
   ["aName","aPrice","aDesc","aImg","aStock"].forEach(i=>$("#"+i).value="");
-  $("#aAvail").value = "1"; $("#aCat").value = "Inne";
+  $("#aAvail").value = "1"; $("#aCat").value = "Inne"; fillSub("Inne", "");
   formPhotos = []; editId = null; cropQueue = [];
   renderStrip(); updateFormMode();
 }
-$("#aCancelEdit").onclick = ()=>{ resetForm(); toast("Anulowano edycję"); };
+$("#aCat").onchange = ()=> fillSub($("#aCat").value, "");
+$("#aCancelEdit").onclick =()=>{ resetForm(); toast("Anulowano edycję"); };
 function startEdit(id){
   if(!isAdmin()) return;
   const p = all().find(x=>x.id===id); if(!p) return;
@@ -949,7 +1004,7 @@ function startEdit(id){
   if(!gh) return toast("Najpierw połącz z GitHub, żeby edytować produkty", 3500);
   editId = id;
   $("#aName").value = p.name; $("#aPrice").value = p.price; $("#aDesc").value = p.desc || ""; $("#aImg").value = "";
-  $("#aAvail").value = p.avail === false ? "0" : "1"; $("#aCat").value = catOf(p);
+  $("#aAvail").value = p.avail === false ? "0" : "1"; $("#aCat").value = catOf(p); fillSub(catOf(p), subOf(p));
   $("#aStock").value = stockN(p) === null ? "" : stockN(p);
   formPhotos = imgsOf(p).map(src=>({src}));
   renderStrip(); updateFormMode();
@@ -975,7 +1030,7 @@ $("#aSave").onclick = async ()=>{
     busy = false;
     const stockRaw = $("#aStock").value.trim();
     const stock = stockRaw === "" ? null : Math.max(0, Math.floor(Number(stockRaw)) || 0);
-    const obj = {id: editId || "p"+Date.now(), name, price, desc, img: imgs[0] || "", images: imgs, avail: $("#aAvail").value === "1", stock, cat: $("#aCat").value};
+    const obj = {id: editId || "p"+Date.now(), name, price, desc, img: imgs[0] || "", images: imgs, avail: $("#aAvail").value === "1", stock, cat: $("#aCat").value, sub: $("#aSub").value};
     const list = editId ? products.map(p=>p.id===editId ? obj : p) : [...products, obj];
     if(await commit(list, `${editId ? "Edytuj" : "Dodaj"} produkt: ${name}`)) resetForm();
   }catch(e){
@@ -987,7 +1042,7 @@ $("#aSave").onclick = async ()=>{
 function renderAdminList(){
   const list = all();
   $("#aList").innerHTML = list.length ? list.map(p=>`
-    <div class="arow"><span class="nm"><img src="${imgOf(p)}" alt="" onerror="this.src='${PLACEHOLDER}'"><span>${esc(p.name)} — ${fmt(+p.price)}<br><small style="color:var(--muted)">${esc(catOf(p))} · ${esc(availText(p))}</small></span></span>
+    <div class="arow"><span class="nm"><img src="${imgOf(p)}" alt="" onerror="this.src='${PLACEHOLDER}'"><span>${esc(p.name)} — ${fmt(+p.price)}<br><small style="color:var(--muted)">${esc(catLabel(p))} · ${esc(availText(p))}</small></span></span>
       <span class="abtns"><button class="ed" data-edit="${esc(p.id)}">Edytuj</button><button data-del="${esc(p.id)}">Usuń</button></span></div>`).join("")
     : '<p class="sub">Brak produktów.</p>';
 }
