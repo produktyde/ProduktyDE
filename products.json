@@ -1,12 +1,5 @@
 [
   {
-    "id": "p2",
-    "name": "Perwoll Wełna i Delikatne 1,5 l",
-    "price": 29.99,
-    "desc": "Płyn do prania ubrań delikatnych, wełny i jedwabiu. Chroni kolory i kształt tkanin, zostawia przyjemny zapach.",
-    "img": ""
-  },
-  {
     "id": "p3",
     "name": "Lenor Płyn do płukania Wiosenna Świeżość",
     "price": 24.99,
