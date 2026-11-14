@@ -237,6 +237,21 @@ input[type=file]::file-selector-button{background:var(--ink);color:#fff;border:n
 .abtns{display:flex;gap:6px;flex:none}
 .arow .nm{display:flex;align-items:center;gap:12px;min-width:0}
 .arow .nm img{width:40px;height:50px;border-radius:8px;object-fit:cover;flex:none;background:var(--soft)}
+/* dostępność */
+.av{display:inline-flex;align-items:center;gap:7px;font-size:.78rem;font-weight:700;padding:4px 11px;border-radius:999px;align-self:flex-start;white-space:nowrap}
+.av::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.av.ok{background:#dcfce7;color:#15803d}
+.av.low{background:#fef3c7;color:#b45309}
+.av.no{background:#fee2e2;color:#dc2626}
+.card.out .thumb img{filter:grayscale(1);opacity:.65}
+.add:disabled,.btn-full:disabled{background:var(--soft);color:var(--muted);cursor:not-allowed;transform:none;box-shadow:none}
+.add:disabled:hover,.btn-full:disabled:hover{background:var(--soft);transform:none;box-shadow:none}
+.qty button:disabled{opacity:.4;cursor:not-allowed}
+.qty button:disabled:hover{background:#fff;color:var(--ink)}
+.field select{width:100%}
+.item .av{margin-top:6px;font-size:.72rem;padding:3px 9px}
+.copybtn{display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border-radius:14px;background:#fff;border:1px solid var(--line);color:var(--ink);font-weight:600;font-size:.9rem;transition:.3s}
+.copybtn:hover{transform:translateY(-2px);box-shadow:0 12px 26px -12px rgba(60,50,150,.35)}
 </style>
 </head>
 <body>
@@ -274,6 +289,7 @@ input[type=file]::file-selector-button{background:var(--ink);color:#fff;border:n
       <p id="resCount">Kliknij w produkt, aby zobaczyć szczegóły</p>
     </div>
     <div class="tools">
+      <button class="copybtn" id="copyList">📋 Kopiuj dostępność</button>
       <div class="search"><input id="q" placeholder="Szukaj produktu…" autocomplete="off"></div>
       <select id="sort">
         <option value="def">Domyślnie</option>
@@ -300,6 +316,7 @@ input[type=file]::file-selector-button{background:var(--ink);color:#fff;border:n
     <div class="line"><span>Sztuk</span><span id="cqty">0</span></div>
     <div class="total"><span>Razem</span><span id="total">0,00 zł</span></div>
     <button class="btn-full" id="checkout">Przejdź do kasy</button>
+    <button class="btn-ghost" id="copyCart">📋 Kopiuj koszyk</button>
     <button class="btn-ghost" id="clear">Wyczyść koszyk</button>
   </footer>
 </aside>
@@ -330,6 +347,10 @@ input[type=file]::file-selector-button{background:var(--ink);color:#fff;border:n
       <h3 class="sec" id="formTitle">Dodaj produkt</h3>
       <div class="field"><label>Nazwa przedmiotu</label><input id="aName" placeholder="np. Persil Discs 40 prań"></div>
       <div class="field"><label>Cena (zł)</label><input id="aPrice" type="number" step="0.01" min="0" placeholder="199.99"></div>
+      <div class="field"><label>Dostępność</label>
+        <select id="aAvail"><option value="1">Dostępny</option><option value="0">Niedostępny</option></select></div>
+      <div class="field"><label>Ilość dostępnych sztuk</label><input id="aStock" type="number" step="1" min="0" placeholder="np. 25 (puste = bez limitu)">
+        <small>Gdy wpiszesz 0, produkt automatycznie jest niedostępny. W koszyku nie da się dodać więcej sztuk niż jest dostępnych.</small></div>
       <div class="field"><label>Opis produktu</label><textarea id="aDesc" placeholder="Jak wygląda, do czego służy..."></textarea></div>
 
       <div class="field">
@@ -416,6 +437,30 @@ let editId = null, formPhotos = [];       // formularz admina: edytowany produkt
 let cropQueue = [], cropTotal = 0, cr = {};
 let gal = {list:[], i:0};
 const all = () => products;
+
+/* ---------- Dostępność ---------- */
+function stockN(p){ const s = p.stock; return (s===undefined || s===null || s==="") ? null : Math.max(0, Math.floor(Number(s)) || 0); }
+function avail(p){ const n = stockN(p); return p.avail !== false && (n === null || n > 0); }
+function availText(p){ if(!avail(p)) return "Niedostępny"; const n = stockN(p); return n === null ? "Dostępny" : `Dostępny (${n} szt.)`; }
+function availBadge(p){
+  if(!avail(p)) return '<span class="av no">Niedostępny</span>';
+  const n = stockN(p);
+  if(n === null) return '<span class="av ok">Dostępny</span>';
+  return `<span class="av ${n<=5?"low":"ok"}">Dostępny · ${n} szt.</span>`;
+}
+function maxQty(p){ if(!avail(p)) return 0; const n = stockN(p); return n === null ? Infinity : n; }
+async function copyText(text, okMsg){
+  try{ await navigator.clipboard.writeText(text); }
+  catch{
+    const ta = document.createElement("textarea");
+    ta.value = text; ta.style.cssText = "position:fixed;opacity:0;top:0;left:0";
+    document.body.appendChild(ta); ta.select();
+    let ok = false; try{ ok = document.execCommand("copy"); }catch{}
+    ta.remove();
+    if(!ok) return toast("Nie udało się skopiować", 3000);
+  }
+  toast(okMsg || "Skopiowano do schowka ✓");
+}
 const isAdmin = () => sessionStorage.getItem("shop_admin")==="1";
 
 function view(){
@@ -507,9 +552,9 @@ function renderGrid(){
   $("#resCount").textContent = query ? `Znaleziono: ${list.length}` : "Kliknij w produkt, aby zobaczyć szczegóły";
   if(!list.length){ g.innerHTML = `<div class="empty">${query ? "Nic nie znaleziono 🙈" : "Brak produktów."}</div>`; return; }
   g.innerHTML = list.map(p=>{
-    const im = imgsOf(p);
+    const im = imgsOf(p), ok = avail(p);
     return `
-    <article class="card" data-id="${esc(p.id)}">
+    <article class="card${ok?"":" out"}" data-id="${esc(p.id)}">
       <div class="thumb" data-open="${esc(p.id)}">
         <img src="${imgOf(p)}" alt="${esc(p.name)}" loading="lazy" onerror="this.src='${PLACEHOLDER}'">
         ${im.length>1?`<img class="alt" src="${srcOf(im[1])}" alt="" loading="lazy" onerror="this.style.display='none'">`:""}
@@ -519,11 +564,12 @@ function renderGrid(){
         ${isAdmin()?`<button class="cedit" data-edit="${esc(p.id)}" title="Edytuj produkt">✏️</button><button class="cdel" data-del="${esc(p.id)}" title="Usuń produkt">🗑</button>`:""}
       </div>
       <div class="info">
+        ${availBadge(p)}
         <h3>${esc(p.name)}</h3>
         <p>${esc(p.desc||"")}</p>
         <div class="bottom">
           <span class="price">${fmt(+p.price)}</span>
-          <button class="add" data-add="${esc(p.id)}">+ Do koszyka</button>
+          <button class="add" data-add="${esc(p.id)}"${ok?"":" disabled"}>${ok?"+ Do koszyka":"Niedostępny"}</button>
         </div>
       </div>
     </article>`;
@@ -537,6 +583,12 @@ function observe(){ document.querySelectorAll(".card").forEach(c=>io.observe(c))
 
 function renderCart(){
   const items = $("#items");
+  // dopasuj ilości w koszyku do aktualnej dostępności
+  Object.keys(cart).forEach(id=>{
+    const p = all().find(x=>x.id===id); if(!p) return;
+    const m = maxQty(p);
+    if(m <= 0) delete cart[id]; else if(cart[id] > m) cart[id] = m;
+  });
   const ids = Object.keys(cart).filter(id=>all().some(p=>p.id===id));
   let total = 0, count = 0;
   if(!ids.length){
@@ -548,7 +600,8 @@ function renderCart(){
       return `<div class="item">
         <img src="${imgOf(p)}" alt="" onerror="this.src='${PLACEHOLDER}'">
         <div><h4>${esc(p.name)}</h4><div class="p">${fmt(+p.price)}</div>
-          <div class="qty"><button data-dec="${esc(id)}">−</button><span>${q}</span><button data-inc="${esc(id)}">+</button></div></div>
+          <div class="qty"><button data-dec="${esc(id)}">−</button><span>${q}</span><button data-inc="${esc(id)}"${q>=maxQty(p)?" disabled":""}>+</button></div>
+          <div>${availBadge(p)}</div></div>
         <button class="rm" data-rm="${esc(id)}">🗑</button></div>`;
     }).join("");
   }
@@ -561,14 +614,24 @@ function renderCart(){
 }
 
 /* ---------- Akcje ---------- */
-function add(id){ cart[id] = (cart[id]||0)+1; renderCart(); toast("Dodano do koszyka ✓"); }
+function add(id){
+  const p = all().find(x=>x.id===id); if(!p) return;
+  if(!avail(p)) return toast("Ten produkt jest niedostępny");
+  if((cart[id]||0) >= maxQty(p)) return toast(`Dostępne tylko ${maxQty(p)} szt. tego produktu`, 3000);
+  cart[id] = (cart[id]||0)+1; renderCart(); toast("Dodano do koszyka ✓");
+}
+function incCart(id){
+  const p = all().find(x=>x.id===id); if(!p) return;
+  if((cart[id]||0) >= maxQty(p)) return toast(`Dostępne tylko ${maxQty(p)} szt. tego produktu`, 3000);
+  cart[id]++; renderCart();
+}
 
 document.addEventListener("click", e=>{
   const t = e.target;
   if(t.dataset.del) delProduct(t.dataset.del);
   else if(t.dataset.edit) startEdit(t.dataset.edit);
   else if(t.dataset.add) add(t.dataset.add);
-  else if(t.dataset.inc){ cart[t.dataset.inc]++; renderCart(); }
+  else if(t.dataset.inc) incCart(t.dataset.inc);
   else if(t.dataset.dec){ if(--cart[t.dataset.dec] <= 0) delete cart[t.dataset.dec]; renderCart(); }
   else if(t.dataset.rm){ delete cart[t.dataset.rm]; renderCart(); }
   else if(t.dataset.g) galGo(gal.i + Number(t.dataset.g));
@@ -581,6 +644,16 @@ const openCart = ()=>{ closeAll(); $("#drawer").classList.add("open"); $("#overl
 $("#openCart").onclick = openCart;
 $("#heroCart").onclick = openCart;
 $("#clear").onclick = ()=>{ cart = {}; renderCart(); };
+$("#copyList").onclick = ()=>{
+  const l = all();
+  if(!l.length) return toast("Brak produktów do skopiowania");
+  copyText(l.map((p,i)=>`${i+1}. ${p.name} — ${availText(p)}`).join("\n"), "Skopiowano listę produktów ✓");
+};
+$("#copyCart").onclick = ()=>{
+  const l = Object.keys(cart).map(id=>all().find(p=>p.id===id)).filter(Boolean);
+  if(!l.length) return toast("Koszyk jest pusty");
+  copyText(l.map((p,i)=>`${i+1}. ${p.name} — ${cart[p.id]} szt. | ${availText(p)}`).join("\n"), "Skopiowano koszyk ✓");
+};
 $("#checkout").onclick = ()=>{
   const n = Object.keys(cart).length;
   toast(n ? "To strona poglądowa — płatności nie są podłączone 🙂" : "Koszyk jest pusty");
@@ -616,7 +689,8 @@ function openProduct(id){
     </div>
     <div class="txt"><h2>${esc(p.name)}</h2><div class="price">${fmt(+p.price)}</div>
     <p class="desc">${esc(p.desc||"")}</p>
-    <button class="btn-full" data-add="${esc(p.id)}">Dodaj do koszyka</button></div>`;
+    ${availBadge(p)}
+    <button class="btn-full" data-add="${esc(p.id)}"${avail(p)?"":" disabled"}>${avail(p)?"Dodaj do koszyka":"Produkt niedostępny"}</button></div>`;
   openModal("productModal");
 }
 
@@ -795,7 +869,8 @@ function updateFormMode(){
   $("#aCancelEdit").style.display = editId ? "" : "none";
 }
 function resetForm(){
-  ["aName","aPrice","aDesc","aImg"].forEach(i=>$("#"+i).value="");
+  ["aName","aPrice","aDesc","aImg","aStock"].forEach(i=>$("#"+i).value="");
+  $("#aAvail").value = "1";
   formPhotos = []; editId = null; cropQueue = [];
   renderStrip(); updateFormMode();
 }
@@ -807,6 +882,8 @@ function startEdit(id){
   if(!gh) return toast("Najpierw połącz z GitHub, żeby edytować produkty", 3500);
   editId = id;
   $("#aName").value = p.name; $("#aPrice").value = p.price; $("#aDesc").value = p.desc || ""; $("#aImg").value = "";
+  $("#aAvail").value = p.avail === false ? "0" : "1";
+  $("#aStock").value = stockN(p) === null ? "" : stockN(p);
   formPhotos = imgsOf(p).map(src=>({src}));
   renderStrip(); updateFormMode();
   setTimeout(()=>$("#addBox").scrollIntoView({behavior:"smooth", block:"start"}), 350);
@@ -829,7 +906,9 @@ $("#aSave").onclick = async ()=>{
       } else imgs.push(f.src);
     }
     busy = false;
-    const obj = {id: editId || "p"+Date.now(), name, price, desc, img: imgs[0] || "", images: imgs};
+    const stockRaw = $("#aStock").value.trim();
+    const stock = stockRaw === "" ? null : Math.max(0, Math.floor(Number(stockRaw)) || 0);
+    const obj = {id: editId || "p"+Date.now(), name, price, desc, img: imgs[0] || "", images: imgs, avail: $("#aAvail").value === "1", stock};
     const list = editId ? products.map(p=>p.id===editId ? obj : p) : [...products, obj];
     if(await commit(list, `${editId ? "Edytuj" : "Dodaj"} produkt: ${name}`)) resetForm();
   }catch(e){
@@ -841,7 +920,7 @@ $("#aSave").onclick = async ()=>{
 function renderAdminList(){
   const list = all();
   $("#aList").innerHTML = list.length ? list.map(p=>`
-    <div class="arow"><span class="nm"><img src="${imgOf(p)}" alt="" onerror="this.src='${PLACEHOLDER}'"><span>${esc(p.name)} — ${fmt(+p.price)}</span></span>
+    <div class="arow"><span class="nm"><img src="${imgOf(p)}" alt="" onerror="this.src='${PLACEHOLDER}'"><span>${esc(p.name)} — ${fmt(+p.price)}<br><small style="color:var(--muted)">${esc(availText(p))}</small></span></span>
       <span class="abtns"><button class="ed" data-edit="${esc(p.id)}">Edytuj</button><button data-del="${esc(p.id)}">Usuń</button></span></div>`).join("")
     : '<p class="sub">Brak produktów.</p>';
 }
