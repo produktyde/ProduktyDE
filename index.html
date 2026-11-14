@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DE — Sklep</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b0b10; --bg2:#13131b; --card:#171722; --line:rgba(255,255,255,.08);
+  --text:#f2f2f7; --muted:#9a9ab0; --accent:#c8a96a; --accent2:#e9d3a0;
+  --radius:20px; --shadow:0 20px 50px rgba(0,0,0,.45);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;
+  background:radial-gradient(600px 400px at 15% 10%,rgba(200,169,106,.12),transparent),
+             radial-gradient(700px 500px at 90% 30%,rgba(110,90,200,.12),transparent)}
+h1,h2,h3{font-family:'Playfair Display',serif;font-weight:700;letter-spacing:.2px}
+button{font-family:inherit;cursor:pointer;border:none}
+img{max-width:100%;display:block}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;justify-content:space-between;align-items:center;
+  padding:16px 5vw;backdrop-filter:blur(16px);background:rgba(11,11,16,.65);border-bottom:1px solid var(--line)}
+.logo{font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--accent2);letter-spacing:1px}
+.cart-btn{position:relative;background:rgba(255,255,255,.06);border:1px solid var(--line);color:var(--text);
+  padding:10px 18px;border-radius:999px;font-weight:500;transition:.3s;display:flex;gap:10px;align-items:center}
+.cart-btn:hover{background:var(--accent);color:#111;transform:translateY(-2px)}
+.badge{background:var(--accent);color:#111;border-radius:999px;min-width:22px;height:22px;display:grid;place-items:center;font-size:.75rem;font-weight:700;padding:0 6px}
+.badge.bump{animation:bump .4s}
+@keyframes bump{50%{transform:scale(1.5)}}
+
+/* HERO */
+.hero{min-height:88vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:140px 6vw 60px}
+.hero .tag{color:var(--accent);letter-spacing:4px;text-transform:uppercase;font-size:.8rem;margin-bottom:20px;animation:fadeUp 1s both}
+.hero h1{font-size:clamp(2.6rem,7vw,5.5rem);line-height:1.08;max-width:900px;animation:fadeUp 1s .15s both}
+.hero h1 span{background:linear-gradient(90deg,var(--accent),var(--accent2),var(--accent));background-size:200%;
+  -webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 5s linear infinite}
+.hero p{color:var(--muted);max-width:560px;margin:24px 0 36px;font-size:1.1rem;animation:fadeUp 1s .3s both}
+.cta{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#111;padding:16px 36px;border-radius:999px;
+  font-weight:600;font-size:1rem;transition:.3s;box-shadow:0 10px 30px rgba(200,169,106,.3);animation:fadeUp 1s .45s both;text-decoration:none;display:inline-block}
+.cta:hover{transform:translateY(-4px) scale(1.03);box-shadow:0 16px 40px rgba(200,169,106,.45)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:none}}
+@keyframes shine{to{background-position:200% 0}}
+
+/* PRODUCTS */
+section{padding:80px 5vw}
+.section-head{text-align:center;margin-bottom:50px}
+.section-head h2{font-size:clamp(2rem,4vw,3rem)}
+.section-head p{color:var(--muted);margin-top:8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:30px;max-width:1300px;margin:0 auto}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;
+  transition:transform .4s cubic-bezier(.2,.8,.2,1),box-shadow .4s,border-color .4s;opacity:0;transform:translateY(40px);display:flex;flex-direction:column}
+.card.show{opacity:1;transform:none}
+.card:hover{transform:translateY(-8px);box-shadow:var(--shadow);border-color:rgba(200,169,106,.5)}
+.thumb{aspect-ratio:1/1;overflow:hidden;background:linear-gradient(135deg,#222233,#171722);cursor:pointer;position:relative}
+.thumb img{width:100%;height:100%;object-fit:cover;transition:transform .7s}
+.card:hover .thumb img{transform:scale(1.09)}
+.thumb .quick{position:absolute;bottom:14px;left:50%;transform:translate(-50%,20px);opacity:0;background:rgba(11,11,16,.8);
+  backdrop-filter:blur(8px);color:#fff;padding:8px 18px;border-radius:999px;font-size:.85rem;transition:.35s;white-space:nowrap}
+.card:hover .quick{opacity:1;transform:translate(-50%,0)}
+.info{padding:22px;display:flex;flex-direction:column;gap:8px;flex:1}
+.info h3{font-size:1.25rem}
+.info p{color:var(--muted);font-size:.92rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.bottom{display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:14px}
+.price{font-size:1.35rem;font-weight:600;color:var(--accent2)}
+.add{background:rgba(200,169,106,.12);color:var(--accent2);border:1px solid rgba(200,169,106,.4);padding:10px 18px;border-radius:999px;font-weight:500;transition:.3s}
+.add:hover{background:var(--accent);color:#111}
+.cdel{position:absolute;top:12px;right:12px;width:38px;height:38px;border-radius:50%;background:rgba(255,70,70,.85);color:#fff;font-size:1rem;z-index:2;transition:.3s}
+.cdel.sure{width:auto;padding:0 16px;border-radius:999px;font-size:.85rem;font-weight:600}
+.arow button.sure{background:#ff3b3b;color:#fff}
+.cdel:hover{transform:scale(1.12);background:#ff3b3b}
+.empty{text-align:center;color:var(--muted);grid-column:1/-1;padding:40px}
+
+/* OVERLAYS */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(6px);z-index:90;opacity:0;pointer-events:none;transition:.3s}
+.overlay.open{opacity:1;pointer-events:auto}
+
+/* CART */
+.drawer{position:fixed;top:0;right:0;height:100%;width:min(440px,100%);background:var(--bg2);z-index:100;
+  transform:translateX(100%);transition:transform .45s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column;border-left:1px solid var(--line)}
+.drawer.open{transform:none}
+.drawer header{display:flex;justify-content:space-between;align-items:center;padding:24px;border-bottom:1px solid var(--line)}
+.drawer header h3{font-size:1.5rem}
+.x{background:rgba(255,255,255,.06);color:var(--text);width:38px;height:38px;border-radius:50%;font-size:1.1rem;transition:.3s}
+.x:hover{background:var(--accent);color:#111;transform:rotate(90deg)}
+.items{flex:1;overflow:auto;padding:16px 24px}
+.item{display:grid;grid-template-columns:70px 1fr auto;gap:14px;align-items:center;padding:14px 0;border-bottom:1px solid var(--line);animation:fadeUp .4s both}
+.item img{width:70px;height:70px;border-radius:12px;object-fit:cover;background:#222233}
+.item h4{font-size:.98rem;font-weight:500}
+.item .p{color:var(--accent2);font-size:.9rem}
+.qty{display:flex;align-items:center;gap:8px;margin-top:6px}
+.qty button{width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.08);color:var(--text)}
+.qty button:hover{background:var(--accent);color:#111}
+.rm{background:none;color:var(--muted);font-size:1.1rem}
+.rm:hover{color:#ff6b6b}
+.drawer footer{padding:24px;border-top:1px solid var(--line)}
+.total{display:flex;justify-content:space-between;font-size:1.3rem;font-weight:600;margin-bottom:16px}
+.total span:last-child{color:var(--accent2)}
+.btn-full{width:100%;padding:15px;border-radius:14px;font-weight:600;font-size:1rem;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#111;transition:.3s}
+.btn-full:hover{transform:translateY(-2px);box-shadow:0 10px 25px rgba(200,169,106,.35)}
+.btn-ghost{width:100%;padding:12px;margin-top:10px;border-radius:14px;background:transparent;color:var(--muted);border:1px solid var(--line)}
+.btn-ghost:hover{color:#fff;border-color:#fff}
+
+/* MODAL */
+.modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-46%) scale(.95);z-index:110;width:min(900px,94vw);max-height:92vh;overflow:auto;
+  background:var(--bg2);border:1px solid var(--line);border-radius:24px;opacity:0;pointer-events:none;transition:.4s cubic-bezier(.2,.8,.2,1)}
+.modal.open{opacity:1;pointer-events:auto;transform:translate(-50%,-50%) scale(1)}
+.modal .x{position:absolute;top:16px;right:16px;z-index:2}
+.pd{display:grid;grid-template-columns:1fr 1fr}
+.pd img{width:100%;height:100%;object-fit:cover;min-height:340px;background:#222233}
+.pd .txt{padding:40px;display:flex;flex-direction:column;gap:14px;justify-content:center}
+.pd h2{font-size:2rem}
+.pd .desc{color:var(--muted);white-space:pre-line}
+.pd .price{font-size:2rem}
+@media(max-width:700px){.pd{grid-template-columns:1fr}.pd .txt{padding:26px}}
+
+/* ADMIN */
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.field label{font-size:.85rem;color:var(--muted)}
+input,textarea{background:rgba(255,255,255,.05);border:1px solid var(--line);color:var(--text);padding:13px 15px;border-radius:12px;
+  font-family:inherit;font-size:.95rem;outline:none;transition:.3s;width:100%}
+input:focus,textarea:focus{border-color:var(--accent);background:rgba(255,255,255,.08)}
+textarea{resize:vertical;min-height:90px}
+.box{padding:36px}
+.box h2{margin-bottom:6px}
+.box .sub{color:var(--muted);margin-bottom:22px;font-size:.92rem}
+.preview{width:100%;max-height:160px;object-fit:cover;border-radius:12px;margin-bottom:14px;display:none}
+.alist{margin-top:26px;border-top:1px solid var(--line);padding-top:18px}
+.arow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);font-size:.92rem}
+.arow button{background:rgba(255,80,80,.12);color:#ff8585;padding:6px 14px;border-radius:999px}
+.arow button:hover{background:#ff5b5b;color:#fff}
+.row2{display:flex;gap:10px}
+.row2 button{flex:1}
+
+footer.site{border-top:1px solid var(--line);text-align:center;padding:40px 5vw;color:var(--muted);font-size:.9rem}
+footer.site a{color:var(--muted);text-decoration:none;cursor:pointer;opacity:.55;transition:.3s}
+footer.site a:hover{opacity:1;color:var(--accent2)}
+
+.toast{position:fixed;bottom:30px;left:50%;transform:translate(-50%,100px);background:var(--accent);color:#111;padding:13px 26px;border-radius:999px;font-weight:500;z-index:200;transition:.45s cubic-bezier(.2,.8,.2,1);box-shadow:var(--shadow)}
+.toast.show{transform:translate(-50%,0)}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">DE</div>
+  <button class="cart-btn" id="openCart">🛍 Koszyk <span class="badge" id="count">0</span></button>
+</nav>
+
+<header class="hero">
+  <div class="tag">Kolekcja 2026</div>
+  <h1>Przedmioty, które <span>warto mieć</span></h1>
+  <p>Starannie wyselekcjonowane produkty. Zobacz, jak wyglądają, do czego służą i ile kosztują — dodaj do koszyka i sprawdź sumę.</p>
+  <a class="cta" href="#produkty">Zobacz produkty</a>
+</header>
+
+<section id="produkty">
+  <div class="section-head">
+    <h2>Nasze produkty</h2>
+    <p>Kliknij w produkt, aby zobaczyć szczegóły</p>
+  </div>
+  <div class="grid" id="grid"></div>
+</section>
+
+<footer class="site">
+  <p>© 2026 DE · Strona poglądowa · <a id="adminLink">Panel admina</a></p>
+</footer>
+
+<div class="overlay" id="overlay"></div>
+
+<!-- Koszyk -->
+<aside class="drawer" id="drawer">
+  <header><h3>Twój koszyk</h3><button class="x" data-close>✕</button></header>
+  <div class="items" id="items"></div>
+  <footer>
+    <div class="total"><span>Razem</span><span id="total">0,00 zł</span></div>
+    <button class="btn-full" id="checkout">Przejdź do kasy</button>
+    <button class="btn-ghost" id="clear">Wyczyść koszyk</button>
+  </footer>
+</aside>
+
+<!-- Szczegóły produktu -->
+<div class="modal" id="productModal"><button class="x" data-close>✕</button><div class="pd" id="pd"></div></div>
+
+<!-- Logowanie admina -->
+<div class="modal" id="loginModal" style="width:min(420px,94vw)">
+  <button class="x" data-close>✕</button>
+  <div class="box">
+    <h2>Panel admina</h2>
+    <p class="sub">Wpisz hasło, aby dodawać produkty.</p>
+    <div class="field"><label>Hasło</label><input type="password" id="pass" placeholder="••••••••"></div>
+    <button class="btn-full" id="loginBtn">Zaloguj</button>
+  </div>
+</div>
+
+<!-- Panel admina -->
+<div class="modal" id="adminModal">
+  <button class="x" data-close>✕</button>
+  <div class="box">
+    <h2>Dodaj produkt</h2>
+    <p class="sub">Zdjęcie: wklej bezpośredni link do obrazka (np. z Imgur — link kończący się na .jpg/.png, czyli i.imgur.com/xxxx.jpg).</p>
+    <div class="field"><label>Nazwa przedmiotu</label><input id="aName" placeholder="np. Zegarek Classic"></div>
+    <div class="field"><label>Cena (zł)</label><input id="aPrice" type="number" step="0.01" min="0" placeholder="199.99"></div>
+    <div class="field"><label>Opis produktu</label><textarea id="aDesc" placeholder="Jak wygląda, do czego służy..."></textarea></div>
+    <div class="field"><label>Link do zdjęcia</label><input id="aImg" placeholder="https://i.imgur.com/....jpg"></div>
+    <img class="preview" id="aPrev" alt="">
+    <button class="btn-full" id="aSave">Dodaj produkt</button>
+
+    <div class="alist">
+      <h3 style="font-size:1.2rem;margin-bottom:8px">Wszystkie produkty</h3>
+      <div id="aList"></div>
+      <p class="sub" style="margin-top:16px">Produkty zapisują się w <b>tej przeglądarce</b>. Żeby widzieli je wszyscy, wyeksportuj plik <code>products.json</code> i wrzuć go do repozytorium obok <code>index.html</code>.</p>
+      <div class="row2">
+        <button class="btn-ghost" id="aRestore">↺ Przywróć usunięte</button>
+        <button class="btn-ghost" id="aExport">⬇ Eksportuj products.json</button>
+        <button class="btn-ghost" id="aLogout">Wyloguj</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const ADMIN_PASSWORD = "maslo12";
+const PLACEHOLDER = "data:image/svg+xml;utf8," + encodeURIComponent(
+  "<svg xmlns='http://www.w3.org/2000/svg' width='600' height='600'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='#2a2a40'/><stop offset='1' stop-color='#14141f'/></linearGradient></defs><rect width='600' height='600' fill='url(#g)'/><text x='50%' y='50%' fill='#777' font-family='sans-serif' font-size='28' text-anchor='middle'>Brak zdjęcia</text></svg>");
+
+// Produkty startowe (możesz je edytować lub nadpisać plikiem products.json)
+const DEFAULTS = [
+  {id:"d1",name:"Zegarek Classic",price:349.00,desc:"Elegancki zegarek analogowy z mineralnym szkłem i skórzanym paskiem. Idealny na co dzień i do garnituru. Wodoszczelny do 50 m.",img:"https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&q=80"},
+  {id:"d2",name:"Słuchawki Studio",price:489.90,desc:"Bezprzewodowe słuchawki nauszne z aktywną redukcją szumów. Do 40 godzin muzyki na jednym ładowaniu.",img:"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&q=80"},
+  {id:"d3",name:"Plecak Urban",price:229.00,desc:"Pojemny, wodoodporny plecak z przegrodą na laptopa 15\". Na studia, do pracy i na weekendowy wypad.",img:"https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&q=80"},
+  {id:"d4",name:"Okulary Aviator",price:179.50,desc:"Klasyczne okulary przeciwsłoneczne z polaryzacją i filtrem UV400. Lekka metalowa oprawka.",img:"https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=800&q=80"},
+  {id:"d5",name:"Lampa Minimal",price:139.00,desc:"Nowoczesna lampka biurkowa LED z regulacją barwy i jasności światła. Idealna do pracy i czytania.",img:"https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=800&q=80"},
+  {id:"d6",name:"Kubek Ceramiczny",price:59.00,desc:"Ręcznie wykończony kubek 350 ml. Utrzymuje ciepło, można myć w zmywarce.",img:"https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?w=800&q=80"}
+];
+
+const $ = s => document.querySelector(s);
+const fmt = n => n.toLocaleString("pl-PL",{minimumFractionDigits:2,maximumFractionDigits:2}) + " zł";
+const esc = s => String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const load = (k,d) => { try{ return JSON.parse(localStorage.getItem(k)) ?? d }catch{ return d } };
+const save = (k,v) => localStorage.setItem(k,JSON.stringify(v));
+const safeUrl = u => /^https?:\/\//i.test(u) ? u : "";
+
+let baseProducts = DEFAULTS;
+let custom = load("shop_custom", []);
+let cart = load("shop_cart", {});   // {id: qty}
+let removed = load("shop_removed", []);   // ID usuniętych produktów startowych
+const all = () => [...baseProducts, ...custom].filter(p=>!removed.includes(p.id));
+const isAdmin = () => sessionStorage.getItem("shop_admin")==="1";
+
+/* ---------- Render ---------- */
+function renderGrid(){
+  const g = $("#grid");
+  const list = all();
+  if(!list.length){ g.innerHTML = '<div class="empty">Brak produktów.</div>'; return; }
+  g.innerHTML = list.map(p=>`
+    <article class="card" data-id="${esc(p.id)}">
+      <div class="thumb" data-open="${esc(p.id)}">
+        <img src="${esc(safeUrl(p.img)||PLACEHOLDER)}" alt="${esc(p.name)}" loading="lazy" onerror="this.src='${PLACEHOLDER}'">
+        <span class="quick">Zobacz szczegóły</span>
+        ${isAdmin()?`<button class="cdel" data-del="${esc(p.id)}" title="Usuń produkt">🗑</button>`:""}
+      </div>
+      <div class="info">
+        <h3>${esc(p.name)}</h3>
+        <p>${esc(p.desc||"")}</p>
+        <div class="bottom">
+          <span class="price">${fmt(+p.price)}</span>
+          <button class="add" data-add="${esc(p.id)}">+ Do koszyka</button>
+        </div>
+      </div>
+    </article>`).join("");
+  observe();
+}
+const io = new IntersectionObserver(es=>es.forEach((e,i)=>{
+  if(e.isIntersecting){ setTimeout(()=>e.target.classList.add("show"), (i%4)*90); io.unobserve(e.target); }
+}),{threshold:.12});
+function observe(){ document.querySelectorAll(".card").forEach(c=>io.observe(c)); }
+
+function renderCart(){
+  const items = $("#items");
+  const ids = Object.keys(cart).filter(id=>all().some(p=>p.id===id));
+  let total = 0, count = 0;
+  if(!ids.length){
+    items.innerHTML = '<p style="color:var(--muted);text-align:center;margin-top:60px">Koszyk jest pusty 🛒</p>';
+  } else {
+    items.innerHTML = ids.map(id=>{
+      const p = all().find(x=>x.id===id), q = cart[id];
+      total += p.price*q; count += q;
+      return `<div class="item">
+        <img src="${esc(safeUrl(p.img)||PLACEHOLDER)}" alt="" onerror="this.src='${PLACEHOLDER}'">
+        <div><h4>${esc(p.name)}</h4><div class="p">${fmt(+p.price)}</div>
+          <div class="qty"><button data-dec="${esc(id)}">−</button><span>${q}</span><button data-inc="${esc(id)}">+</button></div></div>
+        <button class="rm" data-rm="${esc(id)}">🗑</button></div>`;
+    }).join("");
+  }
+  $("#total").textContent = fmt(total);
+  const b = $("#count"); b.textContent = count; b.classList.remove("bump"); void b.offsetWidth; b.classList.add("bump");
+  save("shop_cart", cart);
+}
+
+/* ---------- Cart actions ---------- */
+function add(id){ cart[id] = (cart[id]||0)+1; renderCart(); toast("Dodano do koszyka ✓"); }
+
+document.addEventListener("click", e=>{
+  const t = e.target;
+  if(t.dataset.del) delProduct(t.dataset.del);
+  else if(t.dataset.add) add(t.dataset.add);
+  else if(t.dataset.inc){ cart[t.dataset.inc]++; renderCart(); }
+  else if(t.dataset.dec){ if(--cart[t.dataset.dec] <= 0) delete cart[t.dataset.dec]; renderCart(); }
+  else if(t.dataset.rm){ delete cart[t.dataset.rm]; renderCart(); }
+  else if(t.closest("[data-open]")) openProduct(t.closest("[data-open]").dataset.open);
+  else if(t.dataset.close !== undefined) closeAll();
+});
+$("#overlay").onclick = closeAll;
+$("#openCart").onclick = ()=>{ closeAll(); $("#drawer").classList.add("open"); $("#overlay").classList.add("open"); };
+$("#clear").onclick = ()=>{ cart = {}; renderCart(); };
+$("#checkout").onclick = ()=>{
+  const n = Object.keys(cart).length;
+  toast(n ? "To strona poglądowa — płatności nie są podłączone 🙂" : "Koszyk jest pusty");
+};
+
+/* ---------- Modals ---------- */
+function closeAll(){
+  document.querySelectorAll(".modal,.drawer,.overlay").forEach(el=>el.classList.remove("open"));
+}
+function openModal(id){ closeAll(); $("#"+id).classList.add("open"); $("#overlay").classList.add("open"); }
+function openProduct(id){
+  const p = all().find(x=>x.id===id); if(!p) return;
+  $("#pd").innerHTML = `
+    <img src="${esc(safeUrl(p.img)||PLACEHOLDER)}" alt="${esc(p.name)}" onerror="this.src='${PLACEHOLDER}'">
+    <div class="txt"><h2>${esc(p.name)}</h2><div class="price">${fmt(+p.price)}</div>
+    <p class="desc">${esc(p.desc||"")}</p>
+    <button class="btn-full" data-add="${esc(p.id)}">Dodaj do koszyka</button></div>`;
+  openModal("productModal");
+}
+
+/* ---------- Admin ---------- */
+$("#adminLink").onclick = ()=> sessionStorage.getItem("shop_admin")==="1" ? openAdmin() : (openModal("loginModal"), setTimeout(()=>$("#pass").focus(),300));
+$("#pass").addEventListener("keydown",e=>{ if(e.key==="Enter") $("#loginBtn").click(); });
+$("#loginBtn").onclick = ()=>{
+  if($("#pass").value === ADMIN_PASSWORD){ sessionStorage.setItem("shop_admin","1"); $("#pass").value=""; renderGrid(); openAdmin(); }
+  else toast("Złe hasło ✗");
+};
+$("#aLogout").onclick = ()=>{ sessionStorage.removeItem("shop_admin"); renderGrid(); closeAll(); toast("Wylogowano"); };
+function openAdmin(){ renderAdminList(); openModal("adminModal"); }
+$("#aImg").addEventListener("input",()=>{
+  const u = safeUrl($("#aImg").value.trim()), p = $("#aPrev");
+  p.style.display = u ? "block" : "none"; if(u) p.src = u;
+});
+$("#aSave").onclick = ()=>{
+  const name = $("#aName").value.trim(), price = parseFloat($("#aPrice").value),
+        desc = $("#aDesc").value.trim(), img = $("#aImg").value.trim();
+  if(!name || isNaN(price) || price<0) return toast("Podaj nazwę i poprawną cenę");
+  if(img && !safeUrl(img)) return toast("Link do zdjęcia musi zaczynać się od https://");
+  custom.push({id:"c"+Date.now(), name, price, desc, img});
+  save("shop_custom", custom);
+  ["aName","aPrice","aDesc","aImg"].forEach(i=>$("#"+i).value=""); $("#aPrev").style.display="none";
+  renderGrid(); renderAdminList(); toast("Produkt dodany ✓");
+};
+function renderAdminList(){
+  const list = all();
+  $("#aList").innerHTML = list.length ? list.map(p=>`
+    <div class="arow"><span>${esc(p.name)} — ${fmt(+p.price)}</span><button data-del="${esc(p.id)}">Usuń</button></div>`).join("")
+    : '<p class="sub">Brak produktów.</p>';
+}
+let pendingDel = null, pendingT;
+function delProduct(id){
+  if(!isAdmin()) return;
+  const p = all().find(x=>x.id===id); if(!p) return;
+  // Potwierdzenie bez okienek przeglądarki (confirm bywa blokowany): drugie kliknięcie usuwa
+  if(pendingDel !== id){
+    pendingDel = id; clearTimeout(pendingT);
+    document.querySelectorAll("[data-del]").forEach(b=>{
+      if(b.dataset.del === id){ b.textContent = "Na pewno?"; b.classList.add("sure"); }
+    });
+    pendingT = setTimeout(()=>{ pendingDel = null; renderGrid(); renderAdminList(); }, 4000);
+    return toast("Kliknij jeszcze raz, aby usunąć");
+  }
+  pendingDel = null; clearTimeout(pendingT);
+  if(custom.some(x=>x.id===id)){ custom = custom.filter(x=>x.id!==id); save("shop_custom", custom); }
+  else { removed.push(id); save("shop_removed", removed); }
+  delete cart[id];
+  renderGrid(); renderCart(); renderAdminList(); toast("Produkt usunięty");
+}
+$("#aRestore").onclick = ()=>{
+  if(!removed.length) return toast("Nie ma nic do przywrócenia");
+  removed = []; save("shop_removed", removed);
+  renderGrid(); renderCart(); renderAdminList(); toast("Przywrócono usunięte produkty");
+};
+$("#aExport").onclick = ()=>{
+  const blob = new Blob([JSON.stringify(all(),null,2)],{type:"application/json"});
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "products.json"; a.click();
+  toast("Pobrano products.json");
+};
+
+/* ---------- Toast ---------- */
+let tt; function toast(m){ const t=$("#toast"); t.textContent=m; t.classList.add("show"); clearTimeout(tt); tt=setTimeout(()=>t.classList.remove("show"),2200); }
+
+/* ---------- Start ---------- */
+(async function init(){
+  // Jeśli w repo leży products.json, zastępuje produkty startowe (wspólne dla wszystkich odwiedzających)
+  try{
+    const r = await fetch("products.json",{cache:"no-store"});
+    if(r.ok){ const d = await r.json(); if(Array.isArray(d) && d.length) baseProducts = d; }
+  }catch{}
+  renderGrid(); renderCart();
+})();
+</script>
+</body>
+</html>
