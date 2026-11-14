@@ -40,7 +40,7 @@
     "images": [
       "https://sortiment.lidl.ch/media/catalog/product/cache/80b93a04f8c892116f517db3e19712d6/1/0/1006663_Colorwaschmittel_PSXX.jpg"
     ],
-    "avail": false,
+    "avail": true,
     "stock": 0
   }
 ]
