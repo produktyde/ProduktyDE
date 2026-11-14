@@ -155,5 +155,18 @@
     "avail": true,
     "stock": 2,
     "cat": "Chemia"
+  },
+  {
+    "id": "p1794664187272",
+    "name": "Ariel Universal+ Flüssigwaschmittel (111 Wäschen / Neu & Verbessert)",
+    "price": 85,
+    "desc": "• Pełna nazwa. Ariel Universal+ Flüssigwaschmittel (111 Wäschen / Neu & Verbessert)\n• Pojemność i wydajność. 4,995 l (4995 ml) / 111 prań (1 standardowa doza = 45 ml)\n• Kod kreskowy (EAN). 8006530104692\n• Rodzaj opakowania. Duża butelka z tworzywa sztucznego z wygodnym uchwytem oraz zakrętką dozującą ułatwiającą aplikację\n• Producent / Dystrybutor. Procter & Gamble International Operations SA, 1213 Petit-Lancy (Szwajcaria) / P&G DCE BV-Belgium Distr., B-1853 Strombeek-Bever (Belgia)\nSkład i bezpieczeństwo\n• Główne składniki. 5% – 15% anionowe środki powierzchniowo czynne, niejonowe środki powierzchniowo czynne; < 5% fosfoniany, mydło; enzymy, rozjaśniacze optyczne, środki konserwujące (Benzisothiazolinone) oraz kompozycje zapachowe (Alpha-Isomethyl Ionone, Citronellol, Citrus Aurantium Peel Oil, Limonene, Rose Ketones, Terpineol, Tetramethyl Acetyloctahydronaphthalenes).\n• Sposób użycia. Dozować do przegródki pralki lub bezpośrednio do bębna zgodnie z tabelą na etykiecie (45 ml dla standardowego wsadu 4–5 kg w miękkiej lub średniej wodzie; +35 ml przy twardej wodzie lub silnych zabrudzeniach; 80 ml przy większym wsadzie 6–8 kg). Pranie ręczne polega na rozpuszczeniu 33 ml płynu w 10 litrach wody.\n• Usuwanie plam od 1. prania. Nowa, ulepszona formuła Fleck-Weg-Power głęboko penetruje włókna i skutecznie usuwa uporczywe zabrudzenia już w pierwszym cyklu prania.\n• Skuteczność w zimnej wodzie. Aktywne składniki działają efektywnie w niskich temperaturach (zakres 20°C – 95°C), co wspiera oszczędzanie energii elektrycznej (inicjatywa #WirDrehenRunter z WWF).\n• Ochrona bieli i jasnych tkanin. Zawartość rozjaśniaczy optycznych zapobiega szarzeniu ubrań podczas częstego prania, nadając im promienną czystość i świeży zapach.\n• Wstępne odplamianie. Płynną konsystencję można stosować także punktowo bezpośrednio na trudne plamy przed właściwym praniem w pralce.",
+    "img": "images/p1794664185254-0.jpg",
+    "images": [
+      "images/p1794664185254-0.jpg"
+    ],
+    "avail": true,
+    "stock": 1,
+    "cat": "Inne"
   }
 ]
