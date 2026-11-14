@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>DE — Sklep</title>
+<script>try{document.documentElement.dataset.theme=localStorage.getItem("shop_theme")||"light"}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -15,6 +16,7 @@
   --grad:linear-gradient(135deg,var(--a1),var(--a2) 55%,var(--a3));
   --radius:26px;
   --shadow:0 30px 60px -24px rgba(70,60,170,.30);
+  --chip:rgba(170,174,194,.96);
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
@@ -96,7 +98,7 @@ select{background:#fff;border:1px solid var(--line);color:var(--ink);padding:13p
 .thumb{aspect-ratio:4/5;border-radius:18px;overflow:hidden;background:var(--soft);cursor:pointer;position:relative}
 .thumb img{width:100%;height:100%;object-fit:cover;transition:transform .8s cubic-bezier(.2,.8,.2,1)}
 .card:hover .thumb img{transform:scale(1.08)}
-.chip{position:absolute;left:12px;top:12px;background:rgba(255,255,255,.88);backdrop-filter:blur(10px);padding:6px 14px;border-radius:999px;font-weight:800;font-size:.9rem;box-shadow:0 6px 18px -8px rgba(0,0,0,.25)}
+.chip{position:absolute;left:12px;top:12px;background:var(--chip);color:var(--ink);backdrop-filter:blur(10px);padding:6px 14px;border-radius:999px;font-weight:800;font-size:.9rem;box-shadow:0 6px 18px -8px rgba(0,0,0,.25)}
 .quick{position:absolute;left:12px;right:12px;bottom:12px;background:rgba(14,16,32,.82);backdrop-filter:blur(10px);color:#fff;text-align:center;padding:11px;border-radius:14px;font-size:.86rem;font-weight:600;
   transform:translateY(14px);opacity:0;transition:.4s}
 .card:hover .quick{transform:none;opacity:1}
@@ -252,6 +254,36 @@ input[type=file]::file-selector-button{background:var(--ink);color:#fff;border:n
 .item .av{margin-top:6px;font-size:.72rem;padding:3px 9px}
 .copybtn{display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border-radius:14px;background:#fff;border:1px solid var(--line);color:var(--ink);font-weight:600;font-size:.9rem;transition:.3s}
 .copybtn:hover{transform:translateY(-2px);box-shadow:0 12px 26px -12px rgba(60,50,150,.35)}
+.navr{display:flex;align-items:center;gap:8px}
+.theme{width:40px;height:40px;border-radius:50%;background:var(--soft);color:var(--ink);font-size:1.05rem;display:grid;place-items:center;transition:.3s}
+.theme:hover{transform:rotate(25deg) scale(1.08);background:var(--line)}
+
+/* TRYB CIEMNY */
+[data-theme="dark"]{color-scheme:dark;
+  --bg:#0b0c16; --surface:#151727; --ink:#eef0ff; --muted:#9a9fba; --soft:#212439;
+  --line:rgba(255,255,255,.1); --shadow:0 30px 60px -24px rgba(0,0,0,.65); --chip:rgba(52,56,80,.92)}
+[data-theme="dark"] .blob{opacity:.16}
+[data-theme="dark"] nav{background:rgba(21,23,39,.78);border-color:rgba(255,255,255,.08)}
+[data-theme="dark"] .pill,[data-theme="dark"] .btn-light,[data-theme="dark"] select,[data-theme="dark"] .sc,
+[data-theme="dark"] .drawer,[data-theme="dark"] .modal,[data-theme="dark"] .copybtn,[data-theme="dark"] .crop{background:var(--surface)}
+[data-theme="dark"] .cart-btn,[data-theme="dark"] .btn-dark,[data-theme="dark"] .add,[data-theme="dark"] .toast{color:#0e1020}
+[data-theme="dark"] .cart-btn:hover,[data-theme="dark"] .btn-dark:hover,[data-theme="dark"] .add:hover{color:#fff}
+[data-theme="dark"] .add:disabled{background:var(--soft);color:var(--muted)}
+[data-theme="dark"] .badge{background:#0e1020;color:#fff}
+[data-theme="dark"] .x:hover,[data-theme="dark"] .qty button:hover,[data-theme="dark"] .arow .ed:hover{color:#0e1020}
+[data-theme="dark"] input[type=file]::file-selector-button{color:#0e1020}
+[data-theme="dark"] .qty button{background:#2f3350;color:var(--ink)}
+[data-theme="dark"] .qty button:disabled:hover{background:#2f3350;color:var(--ink)}
+[data-theme="dark"] input:focus,[data-theme="dark"] textarea:focus,[data-theme="dark"] .gh .field input,
+[data-theme="dark"] .btn-ghost:hover{background:var(--surface)}
+[data-theme="dark"] .gnav{background:rgba(21,23,39,.9)}
+[data-theme="dark"] .gnav:hover{background:var(--ink);color:#0e1020}
+[data-theme="dark"] .av.ok{background:rgba(34,197,94,.18);color:#4ade80}
+[data-theme="dark"] .av.low{background:rgba(245,158,11,.18);color:#fbbf24}
+[data-theme="dark"] .av.no{background:rgba(239,68,68,.2);color:#f87171}
+[data-theme="dark"] .arow button{background:rgba(239,68,68,.2);color:#f87171}
+[data-theme="dark"] .arow button:hover,[data-theme="dark"] .arow button.sure{background:#ef4444;color:#fff}
+[data-theme="dark"] .arow .ed{background:var(--soft);color:var(--ink)}
 </style>
 </head>
 <body>
@@ -261,7 +293,10 @@ input[type=file]::file-selector-button{background:var(--ink);color:#fff;border:n
 <nav>
   <div class="logo"><div class="mark">DE</div><span>DE</span></div>
   <div class="navlinks"><a href="#top">Start</a><a href="#produkty">Produkty</a></div>
-  <button class="cart-btn" id="openCart">🛍 Koszyk <span class="badge" id="count">0</span></button>
+  <div class="navr">
+    <button class="theme" id="themeBtn" aria-label="Zmień motyw" title="Tryb jasny / ciemny">🌙</button>
+    <button class="cart-btn" id="openCart">🛍 Koszyk <span class="badge" id="count">0</span></button>
+  </div>
 </nav>
 
 <header class="hero" id="top">
@@ -642,6 +677,13 @@ document.addEventListener("click", e=>{
 $("#overlay").onclick = closeAll;
 const openCart = ()=>{ closeAll(); $("#drawer").classList.add("open"); $("#overlay").classList.add("open"); };
 $("#openCart").onclick = openCart;
+function applyTheme(t){
+  document.documentElement.dataset.theme = t;
+  $("#themeBtn").textContent = t === "dark" ? "☀️" : "🌙";
+  try{ localStorage.setItem("shop_theme", t); }catch{}
+}
+$("#themeBtn").onclick = ()=> applyTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark");
+$("#themeBtn").textContent = document.documentElement.dataset.theme === "dark" ? "☀️" : "🌙";
 $("#heroCart").onclick = openCart;
 $("#clear").onclick = ()=>{ cart = {}; renderCart(); };
 $("#copyList").onclick = ()=>{
