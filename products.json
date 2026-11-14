@@ -48,5 +48,17 @@
     ],
     "avail": true,
     "stock": 1
+  },
+  {
+    "id": "p1794659680802",
+    "name": "Pringles Sweet Paprika – 185 g (Słodka Papryka)",
+    "price": 10,
+    "desc": "Specyfikacja podstawowa\n• Marka: Pringles\n• Smak: Sweet Paprika (Słodka Papryka)\n• Rodzaj produktu: Aromatyzowane chipsy ziemniaczane\n• Masa netto (gramatura): 185 g\n\nChrupiąca przekąska ziemniaczana o łagodnym, lekko słodkawym smaku czerwonej papryki, zamknięta w kultowej, zamykanej tubie. Każdy chips ma charakterystyczny, wyprofilowany kształt paraboloidy hiperbolicznej, dzięki czemu kawałki idealnie do siebie przylegają, nie kruszą się w opakowaniu i długo zachowują świeżość po otwarciu.",
+    "img": "images/p1794659679039-0.jpg",
+    "images": [
+      "images/p1794659679039-0.jpg"
+    ],
+    "avail": true,
+    "stock": 4
   }
 ]
