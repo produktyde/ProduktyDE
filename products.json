@@ -116,5 +116,18 @@
     "avail": true,
     "stock": 1,
     "cat": "Chemia"
+  },
+  {
+    "id": "p1794662532130",
+    "name": "Domestos Kraft & Frische WC Gel Ocean Fresh",
+    "price": 10,
+    "desc": "Specyfikacja produktu\n• Pełna nazwa. Domestos Kraft & Frische WC Gel Ocean Fresh\n• Pojemność. 750 ml\n• Kod kreskowy (EAN). 8720182432360\n• Rodzaj opakowania. Wyprofilowana butelka z tworzywa sztucznego z bezpieczną nakrętką i precyzyjnym aplikatorem ułatwiającym dotarcie pod obrzeże muszli\n• Producent / Dystrybutor. Unilever Deutschland GmbH, Postfach 57 05 50, 22774 Hamburg (Niemcy)\nSkład i bezpieczeństwo\n• Główne składniki. < 5% niejonowe środki powierzchniowo czynne, kationowe środki powierzchniowo czynne, kompozycje zapachowe (Hexyl Cinnamal); substancja dezynfekująca: chlorek benzalkoniowy (0,4 g na 100 g płynu).\n• Sposób użycia. Ścisnąć nakrętkę w zaznaczonych miejscach i przekręcić w celu otwarcia. Rozprowadzić żel równomiernie wewnątrz muszli oraz pod jej obrzeżem, a dla pełnego efektu odkamieniania i dezynfekcji pozostawić na 30 minut przed spłukaniem i użyciem szczotki.\n• Eliminacja bakterii i wirusów. Formuła usuwa 99,99% bakterii oraz określonych wirusów osłonkowych, zapewniając higieniczną czystość toalety.\n• Ochrona przed kamieniem. Skutecznie rozpuszcza istniejące osady wapienne i tworzy na powierzchni ceramiki warstwę ochronną zapobiegającą powstawaniu nowego kamienia.\n• Gęsta, przylegająca konsystencja. Żel długo utrzymuje się na pionowych ściankach muszli (nawet poniżej linii wody), dzięki czemu składniki aktywne działają dłużej.\n• Długotrwała świeżość oceanu. Zawiera kompozycje zapachowe z olejkami eterycznymi (m.in. z lawendy i paczuli), które neutralizują nieprzyjemne zapachy po każdym spłukaniu.",
+    "img": "images/p1794662530178-0.jpg",
+    "images": [
+      "images/p1794662530178-0.jpg"
+    ],
+    "avail": true,
+    "stock": 2,
+    "cat": "Inne"
   }
 ]
