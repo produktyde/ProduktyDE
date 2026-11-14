@@ -90,5 +90,18 @@
     "avail": true,
     "stock": 5,
     "cat": "Chemia"
+  },
+  {
+    "id": "p1794662211004",
+    "name": "ARIEL Universal+ Vollwaschmittel Pulver – Proszek do prania (100 prań / 5,03 kg)",
+    "price": 95,
+    "desc": "Specyfikacja produktu\n• Pełna nazwa: Ariel Universal+ Schnell Auflösend Vollwaschmittel Pulver (100 Wäschen)\n• Wydajność opakowania: 100 prań (1 doza = 80 ml / ok. 50 g)\n• Masa netto: 5,03 kg (5030 g)\n• Kod kreskowy (EAN): 8006530100328\n• Rodzaj opakowania: Kartonowe pudełko z wygodnym uchwytem do przenoszenia (nadające się do recyklingu)\n• Producent / Dystrybutor: Procter & Gamble Service GmbH, D-65823 Schwalbach am Taunus (Niemcy)\nSkład i bezpieczeństwo\n• Główne składniki: 15% – 30% związki wybielające na bazie tlenu; 5% – 15% anionowe środki powierzchniowo czynne; < 5% niejonowe środki powierzchniowo czynne, fosfoniany, polikarboksylany, zeolity; enzymy, rozjaśniacze optyczne oraz kompozycje zapachowe (Alpha-Isomethyl Ionone, Amyl Salicylate, Eucalyptus Globulus Oil, Linalool, Tetramethyl Acetyloctahydronaphthalenes).\n• Sposób użycia: Dozować bezpośrednio do szuflady pralki zgodnie z tabelą na opakowaniu (80 ml dla wsadu 4–5 kg w miękkiej lub średniej wodzie; +35 ml przy silnych zabrudzeniach, większym wsadzie 6–8 kg lub twardej wodzie). Pranie ręczne: rozpuścić 25 ml proszku w 6 litrach wody.\n• Usuwanie plam od 1. prania: Formuła Fleck-Weg-Power wnika głęboko we włókna i skutecznie usuwa uporczywe zabrudzenia oraz nieprzyjemne zapachy już w pierwszym cyklu prania.\n• Błyskawiczne rozpuszczanie: Proszek aktywuje się natychmiast po kontakcie z wodą, dzięki czemu nie pozostawia białych osadów na tkaninach nawet w niskich temperaturach i krótkich programach.\n• Szeroki zakres temperatur (20°C – 95°C): Umożliwia skuteczne i energooszczędne pranie w zimnej wodzie (inicjatywa #WirDrehenRunter z WWF), chroniąc strukturę włókien przed zniszczeniem.\n• Ochrona bieli i jasnych tkanin: Zapobiega szarzeniu ubrań podczas wielokrotnego prania, zapewniając im higieniczną czystość i długotrwały, świeży zapach.",
+    "img": "images/p1794662207874-0.jpg",
+    "images": [
+      "images/p1794662207874-0.jpg"
+    ],
+    "avail": true,
+    "stock": 2,
+    "cat": "Chemia"
   }
 ]
