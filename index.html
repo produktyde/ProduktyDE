@@ -193,6 +193,50 @@ footer.site a:hover{opacity:1;color:var(--a2)}
 code{background:var(--soft);padding:1px 6px;border-radius:6px;font-size:.88em}
 input[type=file]{padding:10px 12px;cursor:pointer}
 input[type=file]::file-selector-button{background:var(--ink);color:#fff;border:none;padding:8px 16px;border-radius:999px;font-family:inherit;font-weight:600;margin-right:12px;cursor:pointer}
+.crop{position:relative;width:100%;max-width:340px;aspect-ratio:4/5;margin:0 auto 16px;border-radius:18px;overflow:hidden;background:#fff;border:1px solid var(--line);touch-action:none;cursor:grab;user-select:none;-webkit-user-select:none}
+.crop:active{cursor:grabbing}
+.crop img{position:absolute;left:0;top:0;max-width:none;transform-origin:0 0;pointer-events:none;will-change:transform}
+.crop::after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:18px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)}
+.zoomrow{display:flex;align-items:center;gap:12px;max-width:340px;margin:0 auto 18px;color:var(--muted);font-weight:700}
+.zoomrow input{padding:0;height:6px;border:none;background:var(--soft);accent-color:var(--a2)}
+.preview{width:auto;max-width:100%;max-height:230px;object-fit:contain;margin:0 auto 14px}
+
+/* galeria w oknie produktu */
+.gal{display:flex;flex-direction:column;background:var(--soft)}
+.gmain{position:relative;flex:1;min-height:380px}
+.pd .gmain img{position:absolute;inset:0;width:100%;height:100%;min-height:0;max-height:none;object-fit:cover}
+.gnav{position:absolute;top:50%;transform:translateY(-50%);width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.9);color:var(--ink);font-size:1.5rem;line-height:1;box-shadow:0 8px 20px -8px rgba(0,0,0,.4);transition:.25s;z-index:2}
+.gnav:hover{background:var(--ink);color:#fff}
+.gprev{left:12px}.gnext{right:12px}
+.gthumbs{display:flex;gap:8px;padding:10px;overflow-x:auto}
+.pd .gthumbs img{width:64px;height:64px;min-height:0;max-height:none;flex:none;border-radius:12px;cursor:pointer;opacity:.6;border:2px solid transparent;transition:.25s;object-fit:cover}
+.pd .gthumbs img.on,.pd .gthumbs img:hover{opacity:1;border-color:var(--a2)}
+@media(max-width:720px){.gmain{min-height:300px}}
+/* karta: drugie zdjęcie po najechaniu, licznik zdjęć, edycja */
+.thumb img.alt{position:absolute;inset:0;opacity:0;transition:opacity .5s,transform .8s cubic-bezier(.2,.8,.2,1)}
+.card:hover .thumb img.alt{opacity:1}
+.cnt{position:absolute;left:12px;bottom:12px;background:rgba(14,16,32,.75);color:#fff;padding:4px 10px;border-radius:999px;font-size:.78rem;font-weight:700;transition:.3s}
+.card:hover .cnt{opacity:0}
+.cedit{position:absolute;top:10px;right:56px;width:38px;height:38px;border-radius:50%;background:rgba(14,16,32,.85);color:#fff;font-size:.95rem;z-index:2;transition:.3s}
+.cedit:hover{transform:scale(1.1);background:var(--a2)}
+/* formularz zdjęć w panelu */
+.field small{color:var(--muted);font-size:.78rem}
+.linkrow{display:flex;gap:8px}
+.linkrow input{flex:1;min-width:0}
+.pstrip{display:flex;gap:10px;flex-wrap:wrap}
+.pstrip:empty{display:none}
+.pth{position:relative;width:84px;height:105px;border-radius:14px;overflow:hidden;background:var(--soft);box-shadow:0 6px 16px -8px rgba(0,0,0,.35)}
+.pth img{width:100%;height:100%;object-fit:cover}
+.pth button{position:absolute;width:26px;height:26px;border-radius:50%;background:rgba(14,16,32,.82);color:#fff;font-size:.85rem;line-height:1;transition:.25s}
+.pth button:hover{background:var(--a2)}
+.pth .prm{top:5px;right:5px}.pth .prm:hover{background:#ef4444}
+.pth [data-pmain]{bottom:5px;right:5px}
+.pth .pmain{position:absolute;left:5px;bottom:5px;background:var(--grad);color:#fff;font-size:.66rem;font-weight:800;padding:3px 8px;border-radius:999px}
+.arow .ed{background:var(--soft);color:var(--ink)}
+.arow .ed:hover{background:var(--ink);color:#fff}
+.abtns{display:flex;gap:6px;flex:none}
+.arow .nm{display:flex;align-items:center;gap:12px;min-width:0}
+.arow .nm img{width:40px;height:50px;border-radius:8px;object-fit:cover;flex:none;background:var(--soft)}
 </style>
 </head>
 <body>
@@ -279,18 +323,31 @@ input[type=file]::file-selector-button{background:var(--ink);color:#fff;border:n
   <button class="x" data-close>✕</button>
   <div class="box">
     <h2>Panel admina</h2>
-    <p class="sub">Dodane i usunięte produkty zapisują się od razu w pliku <code>products.json</code> w repozytorium, więc widzą je wszyscy odwiedzający.</p>
+    <p class="sub">Dodane, edytowane i usunięte produkty zapisują się od razu w pliku <code>products.json</code> w repozytorium, więc widzą je wszyscy odwiedzający.</p>
     <div class="gh" id="ghBox"></div>
 
     <div id="addBox">
-      <h3 class="sec">Dodaj produkt</h3>
+      <h3 class="sec" id="formTitle">Dodaj produkt</h3>
       <div class="field"><label>Nazwa przedmiotu</label><input id="aName" placeholder="np. Persil Discs 40 prań"></div>
       <div class="field"><label>Cena (zł)</label><input id="aPrice" type="number" step="0.01" min="0" placeholder="199.99"></div>
       <div class="field"><label>Opis produktu</label><textarea id="aDesc" placeholder="Jak wygląda, do czego służy..."></textarea></div>
-      <div class="field"><label>Zdjęcie z telefonu lub komputera (PNG, JPG, WEBP…)</label><input id="aFile" type="file" accept="image/*"></div>
-      <div class="field"><label>…albo link do zdjęcia (np. Imgur: i.imgur.com/xxxx.jpg)</label><input id="aImg" placeholder="https://i.imgur.com/....jpg"></div>
-      <img class="preview" id="aPrev" alt="">
+
+      <div class="field">
+        <label>Zdjęcia produktu (pierwsze jest główne)</label>
+        <div class="pstrip" id="pStrip"></div>
+        <input id="aFile" type="file" accept="image/*" multiple>
+        <small>Z telefonu lub komputera. Możesz wybrać kilka naraz, każde przytniesz osobno.</small>
+      </div>
+      <div class="field">
+        <label>…albo dodaj zdjęcie z linku (bezpośredni adres obrazka)</label>
+        <div class="linkrow">
+          <input id="aImg" placeholder="https://i.imgur.com/....jpg">
+          <button class="btn-ghost" id="aImgAdd" style="width:auto;margin:0;padding:0 18px;white-space:nowrap">+ Dodaj</button>
+        </div>
+      </div>
+
       <button class="btn-full" id="aSave">Dodaj produkt</button>
+      <button class="btn-ghost" id="aCancelEdit" style="display:none">Anuluj edycję</button>
     </div>
 
     <div class="alist">
@@ -304,10 +361,26 @@ input[type=file]::file-selector-button{background:var(--ink);color:#fff;border:n
   </div>
 </div>
 
+<!-- Przycinanie zdjęcia -->
+<div class="modal" id="cropModal" style="width:min(440px,94vw);z-index:130">
+  <div class="box" style="padding:26px">
+    <h2 id="cropTitle">Przytnij zdjęcie</h2>
+    <p class="sub" style="margin-bottom:16px">Przeciągaj zdjęcie, aby ustawić kadr, a suwakiem (lub kółkiem myszy / dwoma palcami) je powiększaj lub pomniejszaj. Proporcje 4:5 pasują idealnie do kart produktów.</p>
+    <div class="crop" id="cropView"><img id="cropImg" alt="" draggable="false"></div>
+    <div class="zoomrow"><span>−</span><input type="range" id="cropZoom" min="0" max="1" step="0.001" value="0"><span>+</span></div>
+    <div class="row2">
+      <button class="btn-ghost" id="cropCancel" style="margin:0">Pomiń zdjęcie</button>
+      <button class="btn-full" id="cropOk" style="margin:0">Zatwierdź kadr</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
 const ADMIN_PASSWORD = "maslo12";
+const MAX_PHOTOS = 8;
+const OUT_W = 960;   // szerokość przyciętego zdjęcia (wysokość wychodzi 4:5)
 const PLACEHOLDER = "data:image/svg+xml;utf8," + encodeURIComponent(
   "<svg xmlns='http://www.w3.org/2000/svg' width='600' height='700'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='#e0e4ff'/><stop offset='1' stop-color='#fbd5ea'/></linearGradient></defs><rect width='600' height='700' fill='url(#g)'/><text x='50%' y='50%' fill='#8a8fb0' font-family='sans-serif' font-size='28' text-anchor='middle'>Brak zdjęcia</text></svg>");
 
@@ -330,13 +403,18 @@ const load = (k,d) => { try{ return JSON.parse(localStorage.getItem(k)) ?? d }ca
 const save = (k,v) => { try{ localStorage.setItem(k,JSON.stringify(v)) }catch{} };
 const safeUrl = u => /^(https?:\/\/|images\/)/i.test(u) ? u : "";
 const localImg = {};   // zdjęcia wgrane w tej sesji (widoczne od razu, zanim GitHub odświeży stronę)
-const imgOf = p => esc(localImg[p.img] || safeUrl(p.img) || PLACEHOLDER);
+const srcOf = u => esc(localImg[u] || safeUrl(u || "") || PLACEHOLDER);
+const imgsOf = p => Array.isArray(p.images) && p.images.length ? p.images : (p.img ? [p.img] : []);
+const imgOf = p => srcOf(imgsOf(p)[0]);
 
 const GH_KEY = "shop_gh";                 // {repo, branch, token} — zapisane tylko w przeglądarce admina
 let gh = load(GH_KEY, null);
 let products = [], loaded = false, busy = false;
 let cart = load("shop_cart", {});         // {id: qty}
 let query = "", sortBy = "def";
+let editId = null, formPhotos = [];       // formularz admina: edytowany produkt i jego zdjęcia [{src} | {data}]
+let cropQueue = [], cropTotal = 0, cr = {};
+let gal = {list:[], i:0};
 const all = () => products;
 const isAdmin = () => sessionStorage.getItem("shop_admin")==="1";
 
@@ -349,7 +427,7 @@ function view(){
   return l;
 }
 
-/* ---------- GitHub (zapis products.json) ---------- */
+/* ---------- GitHub (zapis products.json i zdjęć) ---------- */
 const ghUrl = () => `https://api.github.com/repos/${gh.repo}/contents/products.json`;
 const ghHeaders = accept => ({Authorization:`Bearer ${gh.token}`, Accept: accept || "application/vnd.github+json", "X-GitHub-Api-Version":"2022-11-28"});
 const toB64 = s => { let bin = ""; new TextEncoder().encode(s).forEach(c=>bin += String.fromCharCode(c)); return btoa(bin); };
@@ -368,6 +446,13 @@ async function ghSave(list, message){
   const body = {message, content: toB64(JSON.stringify(list, null, 2) + "\n"), branch: gh.branch};
   if(sha) body.sha = sha;
   const w = await fetch(ghUrl(), {method:"PUT", headers:{...ghHeaders(), "Content-Type":"application/json"}, body: JSON.stringify(body)});
+  if(!w.ok){ const e = await w.json().catch(()=>({})); throw new Error(ghError(w.status, e.message)); }
+}
+async function ghUpload(path, dataUrl, message){
+  const w = await fetch(`https://api.github.com/repos/${gh.repo}/contents/${path}`, {
+    method:"PUT", headers:{...ghHeaders(), "Content-Type":"application/json"},
+    body: JSON.stringify({message, content: dataUrl.split(",")[1], branch: gh.branch})
+  });
   if(!w.ok){ const e = await w.json().catch(()=>({})); throw new Error(ghError(w.status, e.message)); }
 }
 async function commit(list, message){
@@ -421,13 +506,17 @@ function renderGrid(){
   const list = view();
   $("#resCount").textContent = query ? `Znaleziono: ${list.length}` : "Kliknij w produkt, aby zobaczyć szczegóły";
   if(!list.length){ g.innerHTML = `<div class="empty">${query ? "Nic nie znaleziono 🙈" : "Brak produktów."}</div>`; return; }
-  g.innerHTML = list.map(p=>`
+  g.innerHTML = list.map(p=>{
+    const im = imgsOf(p);
+    return `
     <article class="card" data-id="${esc(p.id)}">
       <div class="thumb" data-open="${esc(p.id)}">
         <img src="${imgOf(p)}" alt="${esc(p.name)}" loading="lazy" onerror="this.src='${PLACEHOLDER}'">
+        ${im.length>1?`<img class="alt" src="${srcOf(im[1])}" alt="" loading="lazy" onerror="this.style.display='none'">`:""}
         <span class="chip">${fmt(+p.price)}</span>
+        ${im.length>1?`<span class="cnt">📷 ${im.length}</span>`:""}
         <span class="quick">Zobacz szczegóły</span>
-        ${isAdmin()?`<button class="cdel" data-del="${esc(p.id)}" title="Usuń produkt">🗑</button>`:""}
+        ${isAdmin()?`<button class="cedit" data-edit="${esc(p.id)}" title="Edytuj produkt">✏️</button><button class="cdel" data-del="${esc(p.id)}" title="Usuń produkt">🗑</button>`:""}
       </div>
       <div class="info">
         <h3>${esc(p.name)}</h3>
@@ -437,7 +526,8 @@ function renderGrid(){
           <button class="add" data-add="${esc(p.id)}">+ Do koszyka</button>
         </div>
       </div>
-    </article>`).join("");
+    </article>`;
+  }).join("");
   observe();
 }
 const io = new IntersectionObserver(es=>es.forEach((e,i)=>{
@@ -476,10 +566,13 @@ function add(id){ cart[id] = (cart[id]||0)+1; renderCart(); toast("Dodano do kos
 document.addEventListener("click", e=>{
   const t = e.target;
   if(t.dataset.del) delProduct(t.dataset.del);
+  else if(t.dataset.edit) startEdit(t.dataset.edit);
   else if(t.dataset.add) add(t.dataset.add);
   else if(t.dataset.inc){ cart[t.dataset.inc]++; renderCart(); }
   else if(t.dataset.dec){ if(--cart[t.dataset.dec] <= 0) delete cart[t.dataset.dec]; renderCart(); }
   else if(t.dataset.rm){ delete cart[t.dataset.rm]; renderCart(); }
+  else if(t.dataset.g) galGo(gal.i + Number(t.dataset.g));
+  else if(t.dataset.gi !== undefined) galGo(Number(t.dataset.gi));
   else if(t.closest("[data-open]")) openProduct(t.closest("[data-open]").dataset.open);
   else if(t.dataset.close !== undefined) closeAll();
 });
@@ -497,21 +590,37 @@ $("#sort").addEventListener("change",e=>{ sortBy = e.target.value; renderGrid();
 
 /* ---------- Okna ---------- */
 function closeAll(){
+  cropQueue = [];
   document.querySelectorAll(".modal,.drawer,.overlay").forEach(el=>el.classList.remove("open"));
 }
 function openModal(id){ closeAll(); $("#"+id).classList.add("open"); $("#overlay").classList.add("open"); }
 document.addEventListener("keydown",e=>{ if(e.key==="Escape") closeAll(); });
+
+function galGo(i){
+  const n = gal.list.length; if(!n) return;
+  gal.i = ((i % n) + n) % n;
+  const m = $("#gMain"); if(m) m.src = srcOf(gal.list[gal.i]);
+  document.querySelectorAll(".gthumbs img").forEach((im,k)=>im.classList.toggle("on", k===gal.i));
+}
 function openProduct(id){
   const p = all().find(x=>x.id===id); if(!p) return;
+  gal = {list: imgsOf(p), i: 0};
+  const multi = gal.list.length > 1;
   $("#pd").innerHTML = `
-    <img src="${imgOf(p)}" alt="${esc(p.name)}" onerror="this.src='${PLACEHOLDER}'">
+    <div class="gal">
+      <div class="gmain">
+        <img id="gMain" src="${srcOf(gal.list[0])}" alt="${esc(p.name)}" onerror="this.src='${PLACEHOLDER}'">
+        ${multi?`<button class="gnav gprev" data-g="-1" aria-label="Poprzednie">‹</button><button class="gnav gnext" data-g="1" aria-label="Następne">›</button>`:""}
+      </div>
+      ${multi?`<div class="gthumbs">${gal.list.map((u,i)=>`<img class="${i===0?"on":""}" data-gi="${i}" src="${srcOf(u)}" alt="" onerror="this.src='${PLACEHOLDER}'">`).join("")}</div>`:""}
+    </div>
     <div class="txt"><h2>${esc(p.name)}</h2><div class="price">${fmt(+p.price)}</div>
     <p class="desc">${esc(p.desc||"")}</p>
     <button class="btn-full" data-add="${esc(p.id)}">Dodaj do koszyka</button></div>`;
   openModal("productModal");
 }
 
-/* ---------- Admin ---------- */
+/* ---------- Admin: logowanie i połączenie z GitHub ---------- */
 $("#adminLink").onclick = ()=> isAdmin() ? openAdmin() : (openModal("loginModal"), setTimeout(()=>$("#pass").focus(),300));
 $("#pass").addEventListener("keydown",e=>{ if(e.key==="Enter") $("#loginBtn").click(); });
 $("#loginBtn").onclick = ()=>{
@@ -519,7 +628,7 @@ $("#loginBtn").onclick = ()=>{
   else toast("Złe hasło ✗");
 };
 $("#aLogout").onclick = ()=>{ sessionStorage.removeItem("shop_admin"); renderGrid(); closeAll(); toast("Wylogowano"); };
-function openAdmin(){ renderGh(); renderAdminList(); openModal("adminModal"); }
+function openAdmin(){ renderGh(); renderAdminList(); renderStrip(); updateFormMode(); openModal("adminModal"); }
 
 function renderGh(){
   const box = $("#ghBox");
@@ -531,7 +640,7 @@ function renderGh(){
   }
   box.innerHTML = `
     <h3 class="sec">Połącz z GitHub</h3>
-    <p class="sub">Jednorazowo wpisz dane repozytorium i token. Dzięki temu dodawanie i usuwanie produktów zapisuje się w <code>products.json</code>.</p>
+    <p class="sub">Jednorazowo wpisz dane repozytorium i token. Dzięki temu dodawanie, edycja i usuwanie produktów zapisuje się w <code>products.json</code>.</p>
     <div class="field"><label>Repozytorium (nazwa/repo)</label><input id="ghRepo" placeholder="twojanazwa/sklep" value="${esc(guessRepo())}"></div>
     <div class="field"><label>Gałąź</label><input id="ghBranch" placeholder="main" value="main"></div>
     <div class="field"><label>Token dostępu</label><input id="ghToken" type="password" placeholder="github_pat_...">
@@ -540,7 +649,7 @@ function renderGh(){
   $("#ghGo").onclick = async ()=>{
     const repo = $("#ghRepo").value.trim().replace(/^https?:\/\/github\.com\//,"").replace(/\/$/,"");
     const token = $("#ghToken").value.trim();
-    let branch = $("#ghBranch").value.trim() || "main";
+    const branch = $("#ghBranch").value.trim() || "main";
     if(!/^[\w.-]+\/[\w.-]+$/.test(repo) || !token) return toast("Podaj repozytorium (nazwa/repo) i token");
     const btn = $("#ghGo"); btn.textContent = "Sprawdzam…"; btn.disabled = true;
     try{
@@ -558,69 +667,182 @@ function renderGh(){
   };
 }
 
-function showPrev(u){ const p = $("#aPrev"); p.style.display = u ? "block" : "none"; if(u) p.src = u; }
-$("#aImg").addEventListener("input",()=>{
-  if($("#aImg").value) $("#aFile").value = "";
-  showPrev(safeUrl($("#aImg").value.trim()));
+/* ---------- Admin: zdjęcia produktu ---------- */
+function renderStrip(){
+  $("#pStrip").innerHTML = formPhotos.map((f,i)=>`
+    <div class="pth"><img src="${esc(f.data || localImg[f.src] || safeUrl(f.src) || PLACEHOLDER)}" alt="">
+      ${i===0 ? '<span class="pmain">Główne</span>' : `<button data-pmain="${i}" title="Ustaw jako główne">★</button>`}
+      <button class="prm" data-prm="${i}" title="Usuń zdjęcie">×</button></div>`).join("");
+}
+$("#pStrip").addEventListener("click",e=>{
+  const t = e.target;
+  if(t.dataset.prm !== undefined){ formPhotos.splice(Number(t.dataset.prm),1); renderStrip(); }
+  else if(t.dataset.pmain !== undefined){ const [x] = formPhotos.splice(Number(t.dataset.pmain),1); formPhotos.unshift(x); renderStrip(); }
 });
 $("#aFile").addEventListener("change",()=>{
-  const f = $("#aFile").files[0];
-  if(f){ $("#aImg").value = ""; showPrev(URL.createObjectURL(f)); } else showPrev("");
+  const files = [...$("#aFile").files]; $("#aFile").value = "";
+  const room = MAX_PHOTOS - formPhotos.length;
+  if(room <= 0) return toast(`Maksymalnie ${MAX_PHOTOS} zdjęć na produkt`);
+  if(files.length > room) toast(`Dodam tylko ${room} (limit ${MAX_PHOTOS} zdjęć na produkt)`, 3500);
+  cropQueue = files.slice(0, room); cropTotal = cropQueue.length;
+  nextCrop();
 });
-// Zmniejsza zdjęcie (max 1200 px) i zamienia na JPG, żeby strona ładowała się szybko
-function fileToJpeg(file, max = 1200){
-  return new Promise((res, rej)=>{
-    const url = URL.createObjectURL(file), im = new Image();
-    im.onload = ()=>{
-      const k = Math.min(1, max / Math.max(im.width, im.height));
-      const w = Math.round(im.width * k), h = Math.round(im.height * k);
-      const c = document.createElement("canvas"); c.width = w; c.height = h;
-      const x = c.getContext("2d"); x.fillStyle = "#fff"; x.fillRect(0,0,w,h); x.drawImage(im,0,0,w,h);
-      URL.revokeObjectURL(url); res(c.toDataURL("image/jpeg", .86));
-    };
-    im.onerror = ()=>{ URL.revokeObjectURL(url); rej(new Error("nie da się odczytać zdjęcia (użyj JPG, PNG lub WEBP)")); };
-    im.src = url;
-  });
+function nextCrop(){
+  if(!cropQueue.length) return;
+  const f = cropQueue.shift();
+  openCrop(URL.createObjectURL(f), false, cropTotal > 1 ? `${cropTotal - cropQueue.length} z ${cropTotal}` : "");
 }
-async function ghUpload(path, dataUrl, message){
-  const w = await fetch(`https://api.github.com/repos/${gh.repo}/contents/${path}`, {
-    method:"PUT", headers:{...ghHeaders(), "Content-Type":"application/json"},
-    body: JSON.stringify({message, content: dataUrl.split(",")[1], branch: gh.branch})
+function addFromLink(){
+  const u = $("#aImg").value.trim();
+  if(!/^https?:\/\//i.test(u)) return toast("Wklej bezpośredni link do zdjęcia (zaczynający się od https://)", 3500);
+  if(formPhotos.length >= MAX_PHOTOS) return toast(`Maksymalnie ${MAX_PHOTOS} zdjęć na produkt`);
+  $("#aImg").value = "";
+  cropQueue = []; openCrop(u, true, "z linku");
+}
+// Gdy serwis nie pozwala pobrać zdjęcia do przycięcia, dodajemy je jako zwykły link (bez przycinania)
+function linkFallback(u){
+  const t = new Image();
+  t.onload = ()=>{ formPhotos.push({src:u}); renderStrip(); toast("Ten serwis nie pozwala przyciąć zdjęcia, dodano je jako zwykły link", 5000); };
+  t.onerror = ()=>toast("Nie udało się wczytać zdjęcia z tego linku. Użyj bezpośredniego adresu obrazka (prawy przycisk → Kopiuj adres obrazu).", 6500);
+  t.src = u;
+}
+$("#aImgAdd").onclick = addFromLink;
+$("#aImg").addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); addFromLink(); } });
+
+/* ---------- Przycinanie zdjęcia ---------- */
+function cropApply(){
+  const im = $("#cropImg");
+  im.style.width = cr.nw + "px"; im.style.height = cr.nh + "px";
+  im.style.transform = `translate(${cr.tx}px,${cr.ty}px) scale(${cr.s})`;
+}
+function cropClamp(){
+  const iw = cr.nw*cr.s, ih = cr.nh*cr.s;
+  cr.tx = Math.min(Math.max(cr.tx, Math.min(0, cr.W-iw)), Math.max(0, cr.W-iw));
+  cr.ty = Math.min(Math.max(cr.ty, Math.min(0, cr.H-ih)), Math.max(0, cr.H-ih));
+}
+function cropSetScale(ns){
+  ns = Math.min(Math.max(ns, cr.min), cr.max);
+  const cx = (cr.W/2 - cr.tx)/cr.s, cy = (cr.H/2 - cr.ty)/cr.s;   // punkt w środku kadru zostaje w środku
+  cr.s = ns; cr.tx = cr.W/2 - cx*ns; cr.ty = cr.H/2 - cy*ns;
+  cropClamp(); cropApply(); $("#cropZoom").value = ns;
+}
+function closeCrop(){
+  $("#cropModal").classList.remove("open");
+  if(cr.url){ URL.revokeObjectURL(cr.url); cr.url = null; }
+}
+function openCrop(src, cors, label){
+  const im = $("#cropImg");
+  cr = {url: cors ? null : src};
+  $("#cropTitle").textContent = label ? `Przytnij zdjęcie (${label})` : "Przytnij zdjęcie";
+  im.onload = ()=>{
+    const v = $("#cropView");
+    cr.W = v.clientWidth; cr.H = v.clientHeight; cr.nw = im.naturalWidth; cr.nh = im.naturalHeight;
+    if(!cr.nw || !cr.nh || !cr.W){ closeCrop(); toast("Nie da się odczytać zdjęcia"); return nextCrop(); }
+    const cover = Math.max(cr.W/cr.nw, cr.H/cr.nh), contain = Math.min(cr.W/cr.nw, cr.H/cr.nh);
+    cr.min = contain*0.999; cr.max = Math.max(cover*4, cr.min*1.5); cr.s = cover;   // start: zdjęcie wypełnia kadr
+    cr.tx = (cr.W - cr.nw*cover)/2; cr.ty = (cr.H - cr.nh*cover)/2;
+    const z = $("#cropZoom"); z.min = cr.min; z.max = cr.max; z.step = (cr.max-cr.min)/300; z.value = cr.s;
+    cropApply();
+  };
+  im.onerror = ()=>{
+    closeCrop();
+    if(cors) linkFallback(src);
+    else { toast("Nie da się odczytać zdjęcia (użyj JPG, PNG lub WEBP)", 4500); nextCrop(); }
+  };
+  if(cors) im.crossOrigin = "anonymous"; else im.removeAttribute("crossorigin");
+  $("#cropModal").classList.add("open");
+  $("#overlay").classList.add("open");
+  im.src = src;
+}
+(function(){
+  const v = $("#cropView"), ptrs = new Map();
+  v.addEventListener("pointerdown",e=>{ v.setPointerCapture(e.pointerId); ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY}); });
+  v.addEventListener("pointermove",e=>{
+    const p = ptrs.get(e.pointerId); if(!p || !cr.nw) return;
+    if(ptrs.size === 1){ cr.tx += e.clientX-p.x; cr.ty += e.clientY-p.y; cropClamp(); cropApply(); }
+    else if(ptrs.size === 2){
+      const other = [...ptrs.entries()].find(([id])=>id!==e.pointerId)[1];
+      const d0 = Math.hypot(p.x-other.x, p.y-other.y), d1 = Math.hypot(e.clientX-other.x, e.clientY-other.y);
+      if(d0 > 0) cropSetScale(cr.s*d1/d0);
+    }
+    ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});
   });
-  if(!w.ok){ const e = await w.json().catch(()=>({})); throw new Error(ghError(w.status, e.message)); }
+  const up = e=>ptrs.delete(e.pointerId);
+  v.addEventListener("pointerup",up); v.addEventListener("pointercancel",up);
+  v.addEventListener("wheel",e=>{ e.preventDefault(); if(cr.nw) cropSetScale(cr.s*(e.deltaY<0 ? 1.08 : 1/1.08)); },{passive:false});
+  $("#cropZoom").addEventListener("input",e=>{ if(cr.nw) cropSetScale(parseFloat(e.target.value)); });
+})();
+$("#cropCancel").onclick = ()=>{ closeCrop(); nextCrop(); };
+$("#cropOk").onclick = ()=>{
+  if(!cr.nw) return;
+  const k = OUT_W/cr.W, c = document.createElement("canvas");
+  c.width = OUT_W; c.height = Math.round(cr.H*k);
+  const x = c.getContext("2d"); x.fillStyle = "#fff"; x.fillRect(0,0,c.width,c.height);
+  x.imageSmoothingQuality = "high";
+  try{
+    x.drawImage($("#cropImg"), cr.tx*k, cr.ty*k, cr.nw*cr.s*k, cr.nh*cr.s*k);
+    formPhotos.push({data: c.toDataURL("image/jpeg", .88)});
+  }catch{
+    closeCrop(); return toast("Ten serwis nie pozwala przyciąć zdjęcia — pobierz je i dodaj jako plik", 5000);
+  }
+  closeCrop(); renderStrip(); nextCrop();
+};
+
+/* ---------- Admin: dodawanie, edycja, usuwanie ---------- */
+function updateFormMode(){
+  $("#formTitle").textContent = editId ? "Edytuj produkt" : "Dodaj produkt";
+  $("#aSave").textContent = editId ? "Zapisz zmiany" : "Dodaj produkt";
+  $("#aCancelEdit").style.display = editId ? "" : "none";
+}
+function resetForm(){
+  ["aName","aPrice","aDesc","aImg"].forEach(i=>$("#"+i).value="");
+  formPhotos = []; editId = null; cropQueue = [];
+  renderStrip(); updateFormMode();
+}
+$("#aCancelEdit").onclick = ()=>{ resetForm(); toast("Anulowano edycję"); };
+function startEdit(id){
+  if(!isAdmin()) return;
+  const p = all().find(x=>x.id===id); if(!p) return;
+  openAdmin();
+  if(!gh) return toast("Najpierw połącz z GitHub, żeby edytować produkty", 3500);
+  editId = id;
+  $("#aName").value = p.name; $("#aPrice").value = p.price; $("#aDesc").value = p.desc || ""; $("#aImg").value = "";
+  formPhotos = imgsOf(p).map(src=>({src}));
+  renderStrip(); updateFormMode();
+  setTimeout(()=>$("#addBox").scrollIntoView({behavior:"smooth", block:"start"}), 350);
 }
 $("#aSave").onclick = async ()=>{
   if(!gh) return toast("Najpierw połącz z GitHub");
   if(busy) return;
-  const name = $("#aName").value.trim(), price = parseFloat($("#aPrice").value),
-        desc = $("#aDesc").value.trim(), file = $("#aFile").files[0];
-  let img = $("#aImg").value.trim();
+  const name = $("#aName").value.trim(), price = parseFloat($("#aPrice").value), desc = $("#aDesc").value.trim();
   if(!name || isNaN(price) || price<0) return toast("Podaj nazwę i poprawną cenę");
-  if(img && !safeUrl(img)) return toast("Link do zdjęcia musi zaczynać się od https://");
   const btn = $("#aSave"); btn.textContent = "Zapisuję…"; btn.disabled = true; busy = true;
   try{
-    if(file){
-      toast("Wgrywam zdjęcie…", 8000);
-      const data = await fileToJpeg(file);
-      const imgPath = `images/p${Date.now()}.jpg`;
-      await ghUpload(imgPath, data, `Dodaj zdjęcie: ${imgPath}`);
-      localImg[imgPath] = data; img = imgPath;
+    const imgs = [];
+    for(let i=0; i<formPhotos.length; i++){
+      const f = formPhotos[i];
+      if(f.data){
+        toast(`Wgrywam zdjęcie ${i+1} z ${formPhotos.length}…`, 8000);
+        const path = `images/p${Date.now()}-${i}.jpg`;
+        await ghUpload(path, f.data, `Dodaj zdjęcie: ${path}`);
+        localImg[path] = f.data; imgs.push(path);
+      } else imgs.push(f.src);
     }
+    busy = false;
+    const obj = {id: editId || "p"+Date.now(), name, price, desc, img: imgs[0] || "", images: imgs};
+    const list = editId ? products.map(p=>p.id===editId ? obj : p) : [...products, obj];
+    if(await commit(list, `${editId ? "Edytuj" : "Dodaj"} produkt: ${name}`)) resetForm();
   }catch(e){
-    busy = false; btn.textContent = "Dodaj produkt"; btn.disabled = false;
-    return toast("Błąd zdjęcia: " + e.message, 5000);
-  }
-  busy = false;
-  const ok = await commit([...products, {id:"p"+Date.now(), name, price, desc, img}], `Dodaj produkt: ${name}`);
-  btn.textContent = "Dodaj produkt"; btn.disabled = false;
-  if(ok){
-    ["aName","aPrice","aDesc","aImg"].forEach(i=>$("#"+i).value=""); $("#aFile").value = ""; showPrev("");
+    toast("Błąd zdjęcia: " + e.message, 5000);
+  }finally{
+    busy = false; btn.disabled = false; updateFormMode();
   }
 };
 function renderAdminList(){
   const list = all();
   $("#aList").innerHTML = list.length ? list.map(p=>`
-    <div class="arow"><span>${esc(p.name)} — ${fmt(+p.price)}</span><button data-del="${esc(p.id)}">Usuń</button></div>`).join("")
+    <div class="arow"><span class="nm"><img src="${imgOf(p)}" alt="" onerror="this.src='${PLACEHOLDER}'"><span>${esc(p.name)} — ${fmt(+p.price)}</span></span>
+      <span class="abtns"><button class="ed" data-edit="${esc(p.id)}">Edytuj</button><button data-del="${esc(p.id)}">Usuń</button></span></div>`).join("")
     : '<p class="sub">Brak produktów.</p>';
 }
 let pendingDel = null, pendingT;
@@ -639,7 +861,10 @@ async function delProduct(id){
     return toast("Kliknij jeszcze raz, aby usunąć");
   }
   pendingDel = null; clearTimeout(pendingT);
-  if(await commit(products.filter(x=>x.id!==id), `Usuń produkt: ${p.name}`)){ delete cart[id]; renderCart(); }
+  if(await commit(products.filter(x=>x.id!==id), `Usuń produkt: ${p.name}`)){
+    delete cart[id]; renderCart();
+    if(editId === id) resetForm();
+  }
 }
 $("#aExport").onclick = ()=>{
   const blob = new Blob([JSON.stringify(all(),null,2)],{type:"application/json"});
