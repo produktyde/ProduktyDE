@@ -73,7 +73,7 @@
   },
   {
     "id": "p1794660494096",
-    "name": "HARIBO Family Fun Mix – Zestaw żelków i gum rozpuszczalnych (425 g)",
+    "name": "Żelki i gumy rozpuszczalne HARIBO Family Fun Mix – Zestaw (425 g)",
     "price": 15,
     "desc": "Specyfikacja produktu\n\n• Pełna nazwa: Haribo Family Fun Mix (z edycji Jetzt neu mit MAOAM Bloxx)\n• Masa netto: 425 g\n• Kod kreskowy (EAN): 4001686026625\n• Producent: HARIBO GmbH & Co. KG, D-53105 Bonn (Niemcy)\n• Przechowywanie: Przechowywać w chłodnym i suchym miejscu, z dala od źródeł ciepła i wilgoci\n\nKolorowy wielopak ulubionych słodyczy marki Haribo z dodatkiem kultowych gum rozpuszczalnych MAOAM Bloxx. Zestaw składa się z wygodnych, pojedynczo pakowanych minitorebek oraz kostek, dzięki czemu świetnie sprawdza się na przyjęciach, w podróży, w szkole lub jako słodka przekąska do dzielenia się z rodziną.\nZawartość opakowania (mieszanka smaków i form):\n• Haribo Goldbären – klasyczne owocowe Złote Misie w minisaszetkach.\n• Haribo Happy-Cola – żelki w kształcie buteleczek o smaku coli.\n• Haribo Tropifrutti – miękkie żelki o smaku owoców egzotycznych.\n• Haribo Roulette – owocowe krążki w rolkach.\n• MAOAM Bloxx – owocowe gumy rozpuszczalne do żucia.",
     "img": "images/p1794660491761-0.jpg",
@@ -82,7 +82,8 @@
     ],
     "avail": true,
     "stock": 2,
-    "cat": "Słodycze"
+    "cat": "Słodycze",
+    "sub": ""
   },
   {
     "id": "p1794661683523",
