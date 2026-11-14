@@ -220,5 +220,18 @@
     "avail": true,
     "stock": 4,
     "cat": "Inne"
+  },
+  {
+    "id": "p1794664855679",
+    "name": "• kinder Happy Hippo Kakao – Waffel-Spezialität mit feiner Milchcreme (36%) und Kakaocreme (36%)",
+    "price": 10,
+    "desc": "• Pełna nazwa. kinder Happy Hippo Kakao – Waffel-Spezialität mit feiner Milchcreme (36%) und Kakaocreme (36%)\n• Masa netto i zawartość. 103,5 g (5 × 20,7 g) / 5 osobno pakowanych wafelków\n• Kod kreskowy (EAN). 8000500423523\n• Rodzaj opakowania. Kartonowe pudełeczko z przezroczystym okienkiem i wycinanką (teatrzyk kukiełkowy / karta 3D na odwrocie)\n• Producent / Dystrybutor. Ferrero Deutschland GmbH, Hainer Weg 120, D-60599 Frankfurt nad Menem (Niemcy)\nWartości odżywcze (w 100 g produktu)\n• Wartość energetyczna. 2471 kJ / 593 kcal (1 wafelek 20,7 g: 513 kJ / 123 kcal)\n• Tłuszcz. 38,6 g (w tym kwasy tłuszczowe nasycone: 17,6 g)\n• Węglowodany. 53,6 g (w tym cukry: 45,1 g)\n• Białko. 6,7 g\n• Sól. 0,264 g\nSkład i bezpieczeństwo\n• Główne składniki. W skład produktu wchodzą m.in. cukier, tłuszcze roślinne, mąka pszenna, mleko w proszku, kakao o obniżonej zawartości tłuszczu, orzechy laskowe, serwatka oraz czekolada.\n• Informacja o dodatkach i alergenach. Produkt wolny od sztucznych barwników i konserwantów (Ohne Farbstoffe und Konservierungsstoffe), zawiera gluten, mleko, orzechy laskowe i soję (może zawierać śladowe ilości migdałów). Należy przechowywać w chłodnym i suchym miejscu.\nCharakterystyka i zalety\n• Dwa aksamitne kremy w chrupiącym wafelku. Kruchy wafelek w kształcie hipopotama wypełnia podwójne nadzienie: krem mleczny (36%) i kakaowy (36%).\n• Chrupiąca posypka na spodzie. Spód wafelka oblany jest czekoladą oraz posypany kawałkami bezy i orzechów laskowych.\n• Wygodne pojedyncze porcje i zabawa. Każda z 5 sztuk pakowana jest osobno (20,7 g), a opakowanie zawiera elementy do wycięcia (Puppentheater / 3D-Karte).",
+    "img": "images/p1794664853018-0.jpg",
+    "images": [
+      "images/p1794664853018-0.jpg"
+    ],
+    "avail": true,
+    "stock": 4,
+    "cat": "Inne"
   }
 ]
