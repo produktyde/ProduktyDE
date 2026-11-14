@@ -181,5 +181,18 @@
     "avail": true,
     "stock": 1,
     "cat": "Inne"
+  },
+  {
+    "id": "p1794664429921",
+    "name": "Toffifee – Die Haselnuss in Caramel mit Nougatcreme und Schokolade (25 + 5 Gratis)",
+    "price": 15,
+    "desc": "Specyfikacja produktu\n• Pełna nazwa. Toffifee – Die Haselnuss in Caramel mit Nougatcreme und Schokolade (25 + 5 Gratis)\n• Masa netto i zawartość. 250 g (2 × 125 g) / 30 pralinek (2 × 15 sztuk)\n• Kod kreskowy (EAN). 4014400938784\n• Rodzaj opakowania. Kartonowe pudełko zawierające dwie osobno zafoliowane tacki po 15 pralinek (nadające się do recyklingu)\n• Producent / Dystrybutor. August Storck KG, Waldstraße 27, D-13403 Berlin (Niemcy)\nWartości odżywcze (w 100 g produktu)\n• Wartość energetyczna. 2183 kJ / 522 kcal\n• Tłuszcz. 29,1 g (w tym kwasy tłuszczowe nasycone: 12,7 g)\n• Węglowodany. 59,0 g (w tym cukry: 48,7 g)\n• Białko. 5,9 g\n• Sól. 0,24 g\nSkład i bezpieczeństwo\n• Główne składniki. Bazę produktu stanowią cukier, tłuszcze roślinne, orzechy laskowe (10%), syrop glukozowy, mleko w proszku oraz miazga i tłuszcz kakaowy. Pełną listę składników oraz dodatków można sprawdzić w źródłach.\n• Informacja o alergenach i przechowywaniu. Produkt zawiera orzechy laskowe, mleko oraz soję, a także może śladowo zawierać migdały i orzeszki ziemne. Należy go przechowywać w chłodnym i suchym miejscu.\nCharakterystyka i zalety\n• Kompozycja czterech warstw. Każda pralinka łączy w sobie cały orzech laskowy (10%), karmel (41%), krem nugatowy (37%) oraz kroplę ciemnej czekolady (12%).\n• Wersja promocyjna i pakowanie. Rodzinne opakowanie 25 + 5 Gratis podzielono na dwie osobne tacki po 15 sztuk, co ułatwia zachowanie świeżości i sprawdza się jako przekąska do kawy lub poczęstunek dla gości.\n• Jakość marki Storck. Słodycze powstają w oparciu o oryginalną niemiecką recepturę bez dodatku konserwantów.",
+    "img": "images/p1794664428007-0.jpg",
+    "images": [
+      "images/p1794664428007-0.jpg"
+    ],
+    "avail": true,
+    "stock": 4,
+    "cat": "Inne"
   }
 ]
