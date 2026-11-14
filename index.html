@@ -76,6 +76,7 @@ nav{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:50;width
 .s0{top:0;left:0;transform:rotate(-6deg);animation:float 7s ease-in-out infinite}
 .s1{top:70px;right:0;transform:rotate(5deg);animation:float 8s 1s ease-in-out infinite;z-index:2}
 .s2{bottom:0;left:16%;transform:rotate(-2deg);animation:float 9s .5s ease-in-out infinite;z-index:3;width:52%}
+.sc.fade{opacity:0;filter:blur(6px)}
 .sc:hover{z-index:5;box-shadow:0 40px 80px -24px rgba(100,70,220,.5)}
 @keyframes float{50%{translate:0 -16px}}
 @media(max-width:900px){.hero{grid-template-columns:1fr;padding-top:130px;min-height:auto}.stack{height:420px;max-width:440px;margin:10px auto 0;width:100%}}
@@ -640,15 +641,36 @@ function guessRepo(){
 /* ---------- Render ---------- */
 function renderAll(){ renderHero(); renderCats(); renderGrid(); renderCart(); }
 
-function renderHero(){
-  const l = all().slice(0,3);
-  $("#stack").innerHTML = l.map((p,i)=>`
-    <div class="sc s${i}" data-open="${esc(p.id)}">
+/* Karty na górze strony: co 5 s przesuwają się o jeden produkt, aż przejdą przez całą ofertę */
+let heroIdx = 0, heroPause = false;
+const HERO_MS = 5000;
+const heroWin = () => { const l = all(), n = l.length; return l.slice(0,3).map((_,k)=>l[(heroIdx+k)%n]); };
+const heroInner = p => `
       <img src="${imgOf(p)}" alt="${esc(p.name)}" onerror="this.src='${PLACEHOLDER}'">
-      <div><b>${esc(p.name)}</b><span>${fmt(+p.price)}</span></div>
-    </div>`).join("");
-  $("#statN").textContent = all().length;
+      <div><b>${esc(p.name)}</b><span>${fmt(+p.price)}</span></div>`;
+function renderHero(){
+  const n = all().length;
+  if(heroIdx >= n) heroIdx = 0;
+  $("#stack").innerHTML = heroWin().map((p,i)=>`<div class="sc s${i}" data-open="${esc(p.id)}">${heroInner(p)}</div>`).join("");
+  $("#statN").textContent = n;
 }
+function heroTick(){
+  const n = all().length;
+  if(!loaded || n <= 3 || heroPause || document.hidden) return;
+  heroIdx = (heroIdx + 1) % n;
+  const w = heroWin(), cards = document.querySelectorAll("#stack .sc");
+  w.forEach(p=>{ const u = imgsOf(p)[0], src = localImg[u] || safeUrl(u || ""); if(src) new Image().src = src; });  // wczytaj zdjęcia z wyprzedzeniem
+  cards.forEach((c,i)=>{
+    setTimeout(()=>c.classList.add("fade"), i*140);
+    setTimeout(()=>{
+      if(!c.isConnected || !w[i]) return;
+      c.dataset.open = w[i].id; c.innerHTML = heroInner(w[i]); c.classList.remove("fade");
+    }, i*140 + 420);
+  });
+}
+$("#stack").addEventListener("pointerenter",e=>{ if(e.pointerType === "mouse") heroPause = true; });
+$("#stack").addEventListener("pointerleave",e=>{ if(e.pointerType === "mouse") heroPause = false; });
+setInterval(heroTick, HERO_MS);
 
 function renderGrid(){
   const g = $("#grid");
