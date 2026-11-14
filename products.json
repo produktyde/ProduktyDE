@@ -21,7 +21,9 @@
     "images": [
       "https://www.nescafe.com/de/sites/default/files/styles/pdp_banner_image/public/2025-03/DE_de_NES_3.0-WEBSITE_IMG_NEWSLETTER-BLOCK_CLASSIC-200G_960BY960PX_1_250304_2.png.webp?itok=SkQVBYbY",
       "https://www.nescafe.com/de/sites/default/files/styles/pdp_banner_image/public/2025-03/DE_de_NES_3.0-WEBSITE_IMG_NEWSLETTER-BLOCK_CLASSIC-200G_960BY960PX_2_250304_2.png.webp?itok=tBg8SejO"
-    ]
+    ],
+    "avail": true,
+    "stock": 1
   },
   {
     "id": "p1794657268608",
