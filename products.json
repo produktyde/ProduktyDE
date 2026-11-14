@@ -1,0 +1,58 @@
+[
+  {
+    "id": "p1",
+    "name": "Persil Discs Universal 40 prań",
+    "price": 54.99,
+    "desc": "Skoncentrowane kapsułki do prania białego i kolorowego. Skuteczne już od 20°C, wygodne w dozowaniu: jedna kapsułka na jedno pranie.",
+    "img": ""
+  },
+  {
+    "id": "p2",
+    "name": "Perwoll Wełna i Delikatne 1,5 l",
+    "price": 29.99,
+    "desc": "Płyn do prania ubrań delikatnych, wełny i jedwabiu. Chroni kolory i kształt tkanin, zostawia przyjemny zapach.",
+    "img": ""
+  },
+  {
+    "id": "p3",
+    "name": "Lenor Płyn do płukania Wiosenna Świeżość",
+    "price": 24.99,
+    "desc": "Zmiękcza tkaniny i nadaje im długotrwały, świeży zapach. Wystarcza na kilkadziesiąt prań.",
+    "img": ""
+  },
+  {
+    "id": "p4",
+    "name": "Somat Gold tabletki do zmywarki 54 szt.",
+    "price": 44.99,
+    "desc": "Tabletki do zmywarki do mocno zabrudzonych naczyń. Rozpuszczają przypalenia i tłuszcz, a szkło zostawiają błyszczące.",
+    "img": ""
+  },
+  {
+    "id": "p5",
+    "name": "Funny-Frisch Chipsfrisch Ungarisch 150 g",
+    "price": 9.99,
+    "desc": "Klasyczne niemieckie chipsy o smaku papryki po węgiersku. Chrupiące, cienko krojone, idealne na wieczór z filmem.",
+    "img": ""
+  },
+  {
+    "id": "p6",
+    "name": "Haribo Goldbären 175 g",
+    "price": 7.99,
+    "desc": "Oryginalne żelki w kształcie misiów, w pięciu owocowych smakach. Słodka przekąska znana w całej Europie.",
+    "img": ""
+  },
+  {
+    "id": "p7",
+    "name": "Ritter Sport Alpenmilch 100 g",
+    "price": 8.49,
+    "desc": "Kwadratowa czekolada mleczna z alpejskim mlekiem. Delikatna, kremowa i łatwa do połamania na kostki.",
+    "img": ""
+  },
+  {
+    "id": "p8",
+    "name": "Nutella 450 g",
+    "price": 18.99,
+    "desc": "Krem orzechowo-czekoladowy do pieczywa, naleśników i deserów. Wersja z niemieckiej produkcji.",
+    "img": ""
+  }
+]
